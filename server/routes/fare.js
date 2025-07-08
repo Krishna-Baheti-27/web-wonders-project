@@ -1,6 +1,10 @@
-const express = require("express");
-const axios = require("axios");
+import express from "express";
+import axios from "axios";
 const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.send("Welcome to the Fare API!");
+});
 
 router.post("/getRoute", async (req, res) => {
   const { origin, destination } = req.body;
@@ -44,4 +48,4 @@ router.post("/saveRoute", async (req, res) => {
   res.status(201).send("Saved");
 });
 
-module.exports = router;
+export default router;
