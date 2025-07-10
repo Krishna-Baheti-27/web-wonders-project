@@ -1,12 +1,12 @@
 import Navbar from "../components/Navbar";
 
-const MyTrips = () => {
+const Contact = () => {
     return ( 
         <>
         <Navbar />
-        <h1>MyTrips</h1>
+        <h1>Contact</h1>
         </>
      );
 }
  
-export default MyTrips;
+export default Contact;

@@ -1,12 +1,12 @@
 import Navbar from "../components/Navbar";
 
-const MyTrips = () => {
+const LiveMap = () => {
     return ( 
         <>
         <Navbar />
-        <h1>MyTrips</h1>
+        <h1>LiveMap</h1>
         </>
-     );
+    );
 }
  
-export default MyTrips;
+export default LiveMap;

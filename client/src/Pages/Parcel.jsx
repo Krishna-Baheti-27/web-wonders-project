@@ -1,12 +1,12 @@
 import Navbar from "../components/Navbar";
 
-const MyTrips = () => {
+const Parcel = () => {
     return ( 
         <>
         <Navbar />
-        <h1>MyTrips</h1>
+        <h1>parcel</h1>
         </>
-     );
+    );
 }
  
-export default MyTrips;
+export default Parcel;
