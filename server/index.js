@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import fare from "./routes/fare.js";
-dotenv.config();
+
+import adminRouter from "./routes/adminRoutes.js";
 
 const app = express();
 
@@ -12,10 +11,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use("/api", fare);
+app.use("/api/admin", adminRouter);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Web Wonders API!");
 });
 
-app.listen(8000, () => console.log("Server running on port 8000"));
+// for undefined routes
+// app.all("*", (req, res) => {
+//   res.status(404).json({
+//     status: "fail",
+//     message: `Can't find ${req.originalUrl} on this server!`,
+//   });
+// });
+
+export default app;
+
+// | Method   | Endpoint                      | Description                               |
+// | -------- | ----------------------------- | ----------------------------------------- |
+// | `POST`   | `/api/admin/routes`           | ➕ Create a new route (with fare/schedule) |
+// | `GET`    | `/api/admin/routes`           | 📄 Get all admin-created routes           |
+// | `GET`    | `/api/admin/routes/:id`       | 🔍 Get details of a single route          |
+// | `PUT`    | `/api/admin/routes/:id`       | ✏️ Update a route (e.g., fare/timetable)  |
+// | `DELETE` | `/api/admin/routes/:id`       | ❌ Delete a route                          |
+// | `PATCH`  | `/api/admin/routes/:id/delay` | 🔄 Update delay in minutes (real-time)    |
