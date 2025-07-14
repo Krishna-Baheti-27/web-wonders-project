@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const adminSchema = new mongoose.Schema({
+const adminSchema = new Schema({
   username: {
     type: String,
     unique: [true, "Username already exists"],
@@ -10,11 +10,11 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: [true, "User must have a password"],
   },
-  buses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Bus" }],
-  trains: [{ type: mongoose.Schema.Types.ObjectId, ref: "Train" }],
+  buses: [{ type: Schema.Types.ObjectId, ref: "Bus" }],
+  trains: [{ type: Schema.Types.ObjectId, ref: "Train" }],
   createdAt: { type: Date, default: Date.now },
 });
 
-const Admin = mongoose.model("Admin", adminSchema);
+const Admin = model("Admin", adminSchema);
 
 export default Admin;

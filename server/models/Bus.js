@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const routeSchema = new mongoose.Schema({
+const routeSchema = new Schema({
   source: {
     name: String,
     coords: {
@@ -20,8 +20,8 @@ const routeSchema = new mongoose.Schema({
   timetable: [String], // ["08:00", "11:00", ...]
   delay: { type: Number, default: 0 },
   mode: { type: String, default: "bus" },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
+  createdBy: { type: Schema.Types.ObjectId, ref: "Admin" },
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Bus", routeSchema);
+export default model("Bus", routeSchema);
