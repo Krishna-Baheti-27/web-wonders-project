@@ -1,21 +1,22 @@
 import express from "express";
-import cors from "cors";
-
-import adminRouter from "./routes/adminRoutes.js";
 
 const app = express();
 
 // Middleware
+import cors from "cors";
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+import adminRouter from "./routes/adminRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 app.use("/api/admin", adminRouter);
+app.use("/api/users", userRouter);
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Web Wonders API!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Welcome to the Web Wonders API!");
+// });
 
 // for undefined routes
 // app.all("*", (req, res) => {
