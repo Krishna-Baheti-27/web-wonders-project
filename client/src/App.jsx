@@ -1,28 +1,32 @@
 // File: client/src/App.jsx
-import { BrowserRouter as Router , Route , Routes } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx";
+import { BrowserRouter , Route , Routes } from "react-router-dom";
 import Home from "./pages/Home.jsx"
-import LiveMap from "./Pages/LiveMap.jsx";
-import Contact from "./Pages/Contact.jsx";
+import LiveMap from "./pages/LiveMap.jsx";
+import Contact from "./pages/Contact.jsx";
 import MyTrips from "./pages/MyTrips.jsx";
-import Parcel from "./Pages/parcel.jsx";
-import LoginRegister from "./components/LoginSignup/LoginSignup.jsx";
-
-
+import Parcel from "./pages/parcel.jsx";
+import Signup from "./pages/users/Signup.jsx";
+import Login from "./pages/users/login.jsx";
+import Logout from "./pages/users/logout.jsx";
+import {PrivateRoute, NotPrivateRoute} from "./components/PrivateRoute.jsx";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return(
     <div className="min-h-screen bg-lightgray">
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route exact path="/LoginRegister" element={<LoginRegister/> } />
-        <Route path="/live-map" element={<LiveMap/>} />
-        <Route path="/contact" element={<Contact/>} />
-        <Route path="/my-trips" element={<MyTrips/>} />
-        <Route path="/parcel" element={<Parcel/>} />
+          <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+          <Route path="/live-map" element={<PrivateRoute><LiveMap /></PrivateRoute>} />
+          <Route path="/contact" element={<PrivateRoute><Contact /></PrivateRoute>} />
+          <Route path="/my-trips" element={<PrivateRoute><MyTrips /></PrivateRoute>} />
+          <Route path="/parcel" element={<PrivateRoute><Parcel /></PrivateRoute>} />
+          <Route path="/user-logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
+          <Route path="/user-login" element={<NotPrivateRoute><Login /></NotPrivateRoute>} />
+          <Route path="/user-signup" element={<NotPrivateRoute><Signup /></NotPrivateRoute>} />
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>      
-    </Router>
+    </BrowserRouter>
     </div>
   );  
 }
