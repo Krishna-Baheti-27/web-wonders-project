@@ -24,6 +24,4 @@ async function fetchCurrentUser() {
   }
 }
 
-const curr_user = await fetchCurrentUser();
-
-export { curr_user };
+export { fetchCurrentUser };

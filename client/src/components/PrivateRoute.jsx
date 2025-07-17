@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import React from 'react';
 import {jwtDecode} from 'jwt-decode';
+import Context from "../context/Context.jsx";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -14,8 +15,11 @@ const isAuthenticated = () => {
 };
 
 const PrivateRoute = ({ children }) =>  {
-  return isAuthenticated() ? children : <Navigate to="/user-login" />;
-}
+  return (
+    <Context>
+      {isAuthenticated() ? children : <Navigate to="/user-login" />}
+    </Context>
+)}
 
 const NotPrivateRoute = ({ children }) => {
   return isAuthenticated() ? <Navigate to="/" /> : children;

@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
 
 const LiveMap = () => {
-    return ( 
+    return (
         <>
         <Navbar />
         <h1>LiveMap</h1>

@@ -9,6 +9,7 @@ import Signup from "./pages/users/Signup.jsx";
 import Login from "./pages/users/login.jsx";
 import Logout from "./pages/users/logout.jsx";
 import {PrivateRoute, NotPrivateRoute} from "./components/PrivateRoute.jsx";
+import Context from "./context/Context.jsx";
 
 
 function App() {
@@ -16,14 +17,14 @@ function App() {
     <div className="min-h-screen bg-lightgray">
     <BrowserRouter>
       <Routes>
-          <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-          <Route path="/live-map" element={<PrivateRoute><LiveMap /></PrivateRoute>} />
-          <Route path="/contact" element={<PrivateRoute><Contact /></PrivateRoute>} />
-          <Route path="/my-trips" element={<PrivateRoute><MyTrips /></PrivateRoute>} />
-          <Route path="/parcel" element={<PrivateRoute><Parcel /></PrivateRoute>} />
-          <Route path="/user-logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
-          <Route path="/user-login" element={<NotPrivateRoute><Login /></NotPrivateRoute>} />
-          <Route path="/user-signup" element={<NotPrivateRoute><Signup /></NotPrivateRoute>} />
+        <Route path="/" element={<Context><Home /></Context>} />
+        <Route path="/live-map" element={<PrivateRoute><LiveMap /></PrivateRoute>} />
+        <Route path="/contact" element={<PrivateRoute><Contact /></PrivateRoute>} />
+        <Route path="/my-trips" element={<PrivateRoute><MyTrips /></PrivateRoute>} />
+        <Route path="/parcel" element={<PrivateRoute><Parcel /></PrivateRoute>} />
+        <Route path="/user-logout" element={<PrivateRoute><Logout /></PrivateRoute>} />
+        <Route path="/user-login" element={<NotPrivateRoute><Login /></NotPrivateRoute>} />
+        <Route path="/user-signup" element={<NotPrivateRoute><Signup /></NotPrivateRoute>} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>      
     </BrowserRouter>
