@@ -1,13 +1,29 @@
-import axios from 'axios';
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
-const API = axios.create({
-  baseURL: VITE_BASE_URL,
-});
+// To send token to Authorization as header in every request
+import axios from "axios";
 
-API.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+const token = localStorage.getItem("token");
 
-export default API;
+async function fetchCurrentUser() {
+  try {
+    const res = await axios.get(`${VITE_BACKEND_BASE_URL}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (err) {
+    localStorage.removeItem("token");
+    let null_user = {
+      _id: null,
+      name: "Annonimous User",
+      email: null,
+      createdAt: null,
+    };
+    return null_user;
+  }
+}
+
+const curr_user = await fetchCurrentUser();
+
+export { curr_user };

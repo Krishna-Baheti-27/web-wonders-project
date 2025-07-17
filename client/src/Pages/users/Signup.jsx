@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
-  const navigate = useNavigate();
+  const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
   const [name, setName] = useState("");
   function handleNameChange(value) {
@@ -30,13 +28,22 @@ const Signup = () => {
       password: password,
     };
     try {
-      const response = await axios.post(`${VITE_BASE_URL}/users/signup`, data);
+      const response = await axios.post(
+        `${VITE_BACKEND_BASE_URL}/users/signup`,
+        data
+      );
       if (response.status === 201) {
-        navigate("/");
+        response.data && localStorage.setItem("token", response.data.token);
+        location.href = "/";
       }
     } catch (error) {
-      alert("Check error in console");
-      console.log(error);
+      const res = error.response;
+      if (res && res.status === 400) {
+        alert(
+          "Validation error: " +
+            res.data.errors.map((err) => err.msg).join(", ")
+        );
+      } else console.log("Error:", error);
     }
   }
 

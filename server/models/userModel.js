@@ -7,7 +7,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 2,
+    minlength: 3,
     maxlength: 100
   },
   email: {
@@ -21,7 +21,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minlength: 6,
-    // select: false // Don't return password in queries
+    select: false // Don't return password in queries
   },
   createdAt: {
     type: Date,
