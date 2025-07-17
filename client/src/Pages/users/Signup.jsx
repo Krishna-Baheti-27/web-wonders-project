@@ -55,10 +55,10 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white p-8 shadow-xl rounded-lg">
+        <div className="bg-white p-8 shadow-xl rounded-3xl grid grid-cols-1 gap-4" data-aos="zoom-in-up" data-aos-duration="1000">
           <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
           <form className="space-y-4">
-            <div>
+            <div data-aos="zoom-in-up" data-aos-duration="1500">
               <label className="block text-sm font-medium mb-1">Name</label>
               <input
                 type="text"
@@ -68,7 +68,7 @@ const Signup = () => {
                 value={name}
               />
             </div>
-            <div>
+            <div data-aos="zoom-in-up" data-aos-duration="2000">
               <label className="block text-sm font-medium mb-1">Email</label>
               <input
                 type="email"
@@ -78,7 +78,7 @@ const Signup = () => {
                 value={email}
               />
             </div>
-            <div>
+            <div data-aos="zoom-in-up" data-aos-duration="2500">
               <label className="block text-sm font-medium mb-1">Password</label>
               <input
                 type="password"
@@ -94,11 +94,11 @@ const Signup = () => {
               onClick={(e) => {
                 handleSubmit(e);
               }}
-            >
+            data-aos="zoom-in-up" data-aos-duration="3000">
               Create Account
             </button>
           </form>
-          <p className="text-sm text-center mt-4">
+          <p className="text-sm text-center mt-4" data-aos="zoom-in-up" data-aos-duration="3000">
             Already have an account?{" "}
             <Link to="/user-login" className="text-blue-600 hover:underline">
               Login

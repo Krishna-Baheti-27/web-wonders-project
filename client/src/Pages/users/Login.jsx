@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
-
+import { useEffect } from "react";
 const Login = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = "Login";
+  })
   const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
   const [email, setEmail] = useState("");
@@ -47,10 +51,10 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="bg-white p-8 shadow-xl rounded-lg max-w-md w-full">
+      <div className="bg-white p-8 shadow-xl rounded-3xl max-w-md w-full" data-aos="zoom-in-up" data-aos-duration="1000">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         <form className="space-y-4">
-          <div>
+          <div data-aos="zoom-in-up" data-aos-duration="1500">
             <label className="block text-sm font-medium mb-1 text-gray-700">Email</label>
             <input
               type="email"
@@ -60,7 +64,7 @@ const Login = () => {
               value={email}
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4" data-aos="zoom-in-up" data-aos-duration="2000">
             <label className="block text-sm font-medium mb-1 text-gray-700">Password</label>
             <input
               type="password"
@@ -76,11 +80,11 @@ const Login = () => {
             onClick={(e) => {
               handleSubmit(e);
             }}
-          >
+          data-aos="zoom-in-up" data-aos-duration="2500">
             Login
           </button>
         </form>
-        <p className="text-sm text-center mt-4">
+        <p className="text-sm text-center mt-4"data-aos="zoom-in-up" data-aos-duration="3000">
           Don’t have an account?{" "}
           <Link to="/user-signup" className="text-blue-600 hover:underline">
             SignUp
