@@ -9,7 +9,7 @@ import Signup from "./pages/users/Signup.jsx";
 import Login from "./pages/users/login.jsx";
 import Logout from "./pages/users/logout.jsx";
 import {PrivateRoute, NotPrivateRoute} from "./components/PrivateRoute.jsx";
-import { Navigate } from "react-router-dom";
+
 
 function App() {
   return(

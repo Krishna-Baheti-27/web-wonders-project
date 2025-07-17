@@ -23,15 +23,13 @@ async function userSignup(req, res) {
 
 async function userLogin(req, res) {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
   if (!user) return res.status(401).json({ error: 'Invalid email or password' });
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(401).json({ error: 'Invalid email or password' });
 
   const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-
-  req.user = user; // Store user in request for further use
 
   res.header('Authorization', `Bearer ${token}`);
   

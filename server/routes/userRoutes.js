@@ -21,7 +21,8 @@ router.post('/login', [
 import verifyToken from '../middlewares/userMiddleware.js';
 import User from '../models/userModel.js';
 router.get('/me', verifyToken, async (req, res) => {
-  const user = await User.findById(req.userId).select('-password');
+  // userMiddleware will set req.userId
+  const user = await User.findById(req.userId);
   res.json(user);
 });
 

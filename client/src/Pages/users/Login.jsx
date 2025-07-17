@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+    const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -24,7 +24,7 @@ const Login = () => {
             password: password,
         };
         try {
-            const response = await axios.post(`${VITE_BASE_URL}/users/login`, data);
+            const response = await axios.post(`${VITE_BACKEND_BASE_URL}/users/login`, data);
             if (response.status === 200) {
                 response.data && localStorage.setItem("token", response.data.token);
                 navigate("/");
