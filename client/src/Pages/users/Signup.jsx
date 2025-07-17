@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { use, useEffect } from "react";
 
 const Signup = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = "Signup";
+  }) 
   const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
   const [name, setName] = useState("");

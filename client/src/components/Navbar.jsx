@@ -2,13 +2,13 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { DataContext } from "../context/Context.jsx";
-
+import { useEffect } from 'react';
 const Navbar = () => {
     const data = useContext(DataContext);
     let isAuthenticated = false;
     if (data.user._id) isAuthenticated = true;
     return (
-        <nav className="bg-lightgray text-darktext px-6 py-4 shadow-sm flex items-center justify-between">
+        <nav className="bg-lightgray text-darktext px-6 py-4 shadow-sm flex items-center justify-between" data-aos="fade-down" data-aos-duration="2000">
             <Link to="/" className='text-2xl font-bold text-royalblue hover:text-cyan transition'>
                 Apni site</Link>
             <div className="flex space-x-6 items-center text-lg font-sans text-darktext">
