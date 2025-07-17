@@ -1,29 +1,26 @@
 // To send token to Authorization as header in every request
-import axios from 'axios';
+import axios from "axios";
 
 const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
-
-const API = axios.create({
-  baseURL: VITE_BACKEND_BASE_URL,
-});
-
-API.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-
+const token = localStorage.getItem("token");
 
 async function fetchCurrentUser() {
   try {
-    console.log(`${VITE_BACKEND_BASE_URL}/users/me`);
-    const res = await API.get(`${VITE_BACKEND_BASE_URL}/users/me`);
+    const res = await axios.get(`${VITE_BACKEND_BASE_URL}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data;
   } catch (err) {
-    console.error("Token invalid or expired");
-    localStorage.removeItem('token');
-    return null;
+    localStorage.removeItem("token");
+    let null_user = {
+      _id: null,
+      name: "Annonimous User",
+      email: null,
+      createdAt: null,
+    };
+    return null_user;
   }
 }
 
