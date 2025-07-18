@@ -2,6 +2,33 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+
+const CustomAlert = ({ message, isVisible, onClose }) => {
+  if (!isVisible) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full relative animate-fadeIn">
+        <button
+          className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          &times;
+        </button>
+        <div className="flex flex-col items-center">
+          <div className="text-red-500 text-3xl mb-2">&#9888;</div>
+          <p className="text-gray-800 text-center mb-4">{message}</p>
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded font-semibold transition"
+            onClick={onClose}
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 const Login = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -20,35 +47,34 @@ const Login = () => {
     setPassword(value);
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const data = {
-      email: email,
-      password: password,
-    };
-    try {
-      const response = await axios.post(
-        `${VITE_BACKEND_BASE_URL}/users/login`,
-        data
-      );
-      if (response.status === 200) {
-        response.data && localStorage.setItem("token", response.data.token);
-        location.href = "/";
-      }
-    } catch (error) {
-      const res = error.response;
-      if (res && res.status === 400) {
-        // form validation errors
-        alert(
-          "Validation error: " +
-            res.data.errors.map((err) => err.msg).join(", ")
-        );
-      } else if (res && res.status === 401) {
-        // for invalid email or password
-        alert(res.data.error);
-      } else console.log("Error:", error);
+ async function handleSubmit(e) {
+  e.preventDefault();
+  const data = {
+    email: email,
+    password: password,
+  };
+  try {
+    const response = await axios.post(`${VITE_BACKEND_BASE_URL}/users/login`, data);
+    if (response.status === 200) {
+      response.data && localStorage.setItem("token", response.data.token);
+      location.href = "/";
     }
+  } catch (error) {
+    const res = error.response;
+    if (res && res.status === 400) {
+      // form validation errors
+      setAlertMessage("Validation error: " + res.data.errors.map((err) => err.msg).join(", "));
+      setIsAlertVisible(true);
+    } else if (res && res.status === 401) {
+      // for invalid email or password
+      setAlertMessage(res.data.error);
+      setIsAlertVisible(true);
+    } else console.log("Error:", error);
   }
+}
+const [alertMessage, setAlertMessage] = useState("");
+const [isAlertVisible, setIsAlertVisible] = useState(false);
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -92,6 +118,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
+      <CustomAlert message={alertMessage} isVisible={isAlertVisible} onClose={() => setIsAlertVisible(false)} />
     </div>
   );
 };
