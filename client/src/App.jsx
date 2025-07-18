@@ -10,10 +10,17 @@ import Login from "./pages/users/login.jsx";
 import Logout from "./pages/users/logout.jsx";
 import {PrivateRoute, NotPrivateRoute} from "./components/PrivateRoute.jsx";
 import Context from "./context/Context.jsx";
-import Footer from "./Pages/footer.jsx";
-
+import AOS from "aos";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    // Initialize AOS
+    AOS.init({
+      duration: 500, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once
+    });
+  }, []);
   return(
     <div className="min-h-screen bg-lightgray">
     <BrowserRouter>
@@ -27,8 +34,7 @@ function App() {
         <Route path="/user-login" element={<NotPrivateRoute><Login /></NotPrivateRoute>} />
         <Route path="/user-signup" element={<NotPrivateRoute><Signup /></NotPrivateRoute>} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
-      </Routes>      
-      <Footer/>
+      </Routes>
     </BrowserRouter>
     </div>
   );  

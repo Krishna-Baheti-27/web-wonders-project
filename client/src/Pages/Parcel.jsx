@@ -1,4 +1,5 @@
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar.jsx";
+import Footer from "../components/Footer.jsx";
 import { useEffect } from "react";
 const Parcel = () => {
     useEffect(() => {
@@ -9,6 +10,7 @@ const Parcel = () => {
         <>
         <Navbar />
         <h1>parcel</h1>
+        <Footer />
         </>
     );
 }

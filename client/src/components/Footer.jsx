@@ -1,6 +1,4 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 const Footer = () => {
     return (
         <footer className="bg-darkgray text-white px-6 py-8 shadow-sm flex flex-col md:flex-row items-center justify-between" id = "footer">
