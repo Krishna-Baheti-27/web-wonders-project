@@ -10,6 +10,7 @@ import Login from "./pages/users/login.jsx";
 import Logout from "./pages/users/logout.jsx";
 import {PrivateRoute, NotPrivateRoute} from "./components/PrivateRoute.jsx";
 import Context from "./context/Context.jsx";
+import Footer from "./Pages/footer.jsx";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/user-signup" element={<NotPrivateRoute><Signup /></NotPrivateRoute>} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>      
+      <Footer/>
     </BrowserRouter>
     </div>
   );  

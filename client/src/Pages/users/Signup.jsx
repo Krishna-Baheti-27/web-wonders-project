@@ -7,6 +7,8 @@ const Signup = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Signup";
+    document.getElementById("footer").innerHTML = "";
+    document.getElementById("footer").style = "";
   }) 
   const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
