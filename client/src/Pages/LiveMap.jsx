@@ -1,28 +1,124 @@
 import Aos from "aos";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
 const LiveMap = () => {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        document.title = "LiveMap";
-    })
-    return (
-        <>
-        <Navbar />
-            <div className="map-container flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6" data-aos="fade-up">Live Map</h2>
-            <div className="map-placeholder w-full max-w-4xl h-96 bg-gray-300 rounded-lg shadow-lg flex items-center justify-center text-gray-600 text-xl" data-aos="fade-up">
-                {/* This is where your actual map component would go */}
-                Map will be displayed here
-            </div>
-            <p className="mt-8 text-lg text-gray-700" data-aos="fade-up">
-                Track your shipments and vehicles in real-time.
-            </p>
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = "LiveMap";
+  });
+
+  const [routes, setRoutes] = useState([]);
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [matchedRoute, setMatchedRoute] = useState(null);
+  
+
+  useEffect(() => {
+    fetch("/data/routes.json")
+      .then((res) => res.json())
+      .then(setRoutes);
+  }, []);
+  const handleSearch = () => {
+    const lowerFrom = from.toLowerCase();
+    const lowerTo = to.toLowerCase();
+    const found = routes.find((route) => {
+      const stopNames = route.stops.map((s) => s.name.toLowerCase());
+      return stopNames.includes(lowerFrom) && stopNames.includes(lowerTo);
+    });
+
+    // console.log(found);
+
+    setMatchedRoute(found || null);
+  };
+
+  const defaultCenter = [21.1645, 72.7850];
+
+  return (
+    <>
+      <Navbar />
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Interactive Transit Map</h2>
+
+      {/* Search Input */}
+      <div className="flex flex-col md:flex-row gap-3 mb-4">
+        <input
+          type="text"
+          placeholder="From stop"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          className="px-4 py-2 border rounded-md w-full md:w-1/3"
+        />
+        <input
+          type="text"
+          placeholder="To stop"
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          className="px-4 py-2 border rounded-md w-full md:w-1/3"
+        />
+        <button
+          onClick={handleSearch}
+          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          Search Route
+        </button>
+      </div>
+
+      {/* Map */}
+      <MapContainer center={defaultCenter} zoom={15} style={{ height: "500px", width: "100%" }}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+        {/* Show either matched route or all */}
+        {(matchedRoute ? [matchedRoute] : routes).map((route) => (
+          <Polyline
+            key={route.id}
+            positions={route.stops.map((s) => [s.lat, s.lng])}
+            color={route.color}
+          />
+        ))}
+
+        {(matchedRoute ? matchedRoute.stops : routes.flatMap(r => r.stops)).map((stop, i) => (
+          <Marker
+            key={i}
+            position={[stop.lat, stop.lng]}
+            icon={L.icon({
+              iconUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png",
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+            })}
+          >
+            <Popup>
+              <strong>{stop.name}</strong>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+
+      {matchedRoute ? (
+        <div className="mt-4 p-4 bg-green-100 text-green-800 rounded">
+          Route Found: <strong>{matchedRoute.name}</strong>
         </div>
-        <Footer />
-        </>
-    );
+      ) : (
+        from && to && (
+          <div className="mt-4 p-4 bg-yellow-100 text-yellow-800 rounded">
+            No direct route found between <strong>{from}</strong> and <strong>{to}</strong>.
+          </div>
+        )
+      )}
+    </div>
+    <Footer />
+    </>
+  );
 }
- 
+
 export default LiveMap;
