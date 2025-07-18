@@ -5,7 +5,7 @@ import axios from "axios";
 const CustomAlert = ({ message, isVisible, onClose }) => {
   if (!isVisible) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
       <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full relative animate-fadeIn">
         <button
           className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none"
@@ -83,7 +83,7 @@ const Signup = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <div className={`min-h-screen bg-gray-100 flex items-center justify-center px-4 ${isAlertVisible ? "blur-sm" : ""}`}id = "signup">
         <div className="w-full max-w-md">
           <div className="bg-white p-8 shadow-xl rounded-3xl grid grid-cols-1 gap-4" data-aos="zoom-in-up">
             <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
