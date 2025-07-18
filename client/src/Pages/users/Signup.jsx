@@ -83,7 +83,7 @@ const Signup = () => {
 
   return (
     <>
-      <div className={`min-h-screen bg-gray-100 flex items-center justify-center px-4 ${isAlertVisible ? "blur-sm" : ""}`}id = "signup">
+      <div className={`min-h-screen bg-gray-100 flex items-center justify-center px-4 transition-all duration-300 ${isAlertVisible ? "blur-sm" : ""}`}id = "signup">
         <div className="w-full max-w-md">
           <div className="bg-white p-8 shadow-xl rounded-3xl grid grid-cols-1 gap-4" data-aos="zoom-in-up">
             <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
