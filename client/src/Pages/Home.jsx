@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { AlertCircle, BusFront, Car, MapPinned } from "lucide-react";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
+import homeIllustration from "./Assets/home-illustration.png";
 
 function Home() {
   useEffect(() => {
@@ -69,7 +70,7 @@ function Home() {
         {/* Right Side - Illustration */}
         <div className="w-full md:w-1/2 mt-10 md:mt-0 flex justify-center">
           <img
-            src="" // Replace with downloaded Storyset image
+            src={homeIllustration} 
             alt="Hero illustration"
             className="w-[500px] h-auto rounded-2xl shadow-xl"
           />
