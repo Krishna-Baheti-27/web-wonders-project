@@ -13,6 +13,7 @@ import { PrivateRoute, NotPrivateRoute } from "./components/PrivateRoute.jsx";
 import Context from "./context/Context.jsx";
 import AOS from "aos";
 import { useEffect } from "react";
+import Schedules from "./pages/Schedules.jsx";
 
 function App() {
   useEffect(() => {
@@ -39,6 +40,14 @@ function App() {
             element={
               <PrivateRoute>
                 <LiveMap />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/schedules"
+            element={
+              <PrivateRoute>
+                <Schedules />
               </PrivateRoute>
             }
           />

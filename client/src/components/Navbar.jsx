@@ -56,6 +56,13 @@ const Navbar = () => {
             Live Map
           </Link>
           <Link
+            to="/schedules"
+            className="hover:text-cyan text-gray-700 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Schedules
+          </Link>
+          <Link
             to="/my-trips"
             className="hover:text-cyan text-gray-700 transition"
           >
@@ -115,6 +122,13 @@ const Navbar = () => {
             onClick={() => setIsOpen(false)}
           >
             Live Map
+          </Link>
+          <Link
+            to="/schedules"
+            className="hover:text-cyan text-gray-700 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Schedules
           </Link>
           <Link
             to="/my-trips"
