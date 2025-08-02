@@ -18,6 +18,7 @@ import routeRouter from "./routes/routeRoutes.js";
 import rideRouter from "./routes/rideRoutes.js";
 import alertRouter from "./routes/alertRoutes.js";
 import tripRouter from "./routes/tripRoutes.js";
+import paymentRouter from './routes/paymentRouter.js';
 
 app.use("/api/admin", adminRouter);
 app.use("/api/users", userRouter);
@@ -26,5 +27,6 @@ app.use("/api/routes", routeRouter);
 app.use("/api/rides", rideRouter);
 app.use("/api/alerts", alertRouter);
 app.use("/api/trips", tripRouter);
+app.use("/api/payment", paymentRouter);
 
 export default app;
