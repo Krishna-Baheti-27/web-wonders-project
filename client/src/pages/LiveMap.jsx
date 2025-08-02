@@ -23,6 +23,7 @@ import {
   RotateCcw,
   Share
 } from 'lucide-react';
+import Navbar from '../components/Navbar';
 
 const InteractiveMapWebsite = () => {
   const [fromLocation, setFromLocation] = useState('');
@@ -85,6 +86,8 @@ const InteractiveMapWebsite = () => {
   }, [fromLocation, toLocation, transportMode]);
 
   return (
+    <>
+    <Navbar/>
     <div className="h-screen flex bg-gray-100 overflow-hidden">
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'w-96' : 'w-0'} transition-all duration-300 bg-white shadow-xl z-30 overflow-hidden`}>
@@ -405,6 +408,7 @@ const InteractiveMapWebsite = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

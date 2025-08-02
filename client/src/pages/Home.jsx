@@ -92,6 +92,7 @@ const LogisticsWebsite = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <Navbar/>
       {/* Hero Section - Exact match with isometric illustration */}
       <section className="bg-gray-100 py-20">
         <div className="max-w-7xl mx-auto px-6">
@@ -466,6 +467,7 @@ const LogisticsWebsite = () => {
           </div>
         </div>
       </section>
+      <Footer/>
     </div>
   );
 };

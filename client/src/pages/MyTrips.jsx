@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Clock, DollarSign, ArrowRight, Heart } from "lucide-react";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 // Removed unused imports and Navbar/Footer as they are in App.jsx now
 
 const MyTripsPage = () => {
@@ -35,7 +37,8 @@ const MyTripsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50">
+    <Navbar/>
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -125,6 +128,7 @@ const MyTripsPage = () => {
           )}
         </div>
       </section>
+      <Footer/>
       {/* ...rest of your component ... */}
     </div>
   );

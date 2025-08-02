@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Navbar from "../components/Navbar";
 // Note: Navbar and Footer are removed as they are now in App.jsx
 
 const ALERTS_API_URL = "http://localhost:4000/api/alerts";
@@ -44,6 +45,7 @@ const AlertForm = ({ onAlertSaved, editingAlert, setEditingAlert }) => {
 
   return (
     <div className="bg-white p-8 rounded-xl shadow-lg mb-12">
+      <Navbar/>
       <h3 className="text-2xl font-bold text-gray-800 mb-6">
         {editingAlert ? "Edit Alert" : "Create New Alert"}
       </h3>
