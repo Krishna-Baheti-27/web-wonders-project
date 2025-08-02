@@ -72,7 +72,7 @@ const Navbar = () => {
             to="/my-trips"
             className="hover:text-cyan text-gray-700 transition"
           >
-            My Trips
+            Trips
           </Link>
           {/* --- THIS IS THE NEWLY ADDED LINK FOR DESKTOP --- */}
           <Link
