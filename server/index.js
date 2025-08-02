@@ -15,8 +15,12 @@ import adminRouter from "./routes/adminRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import parcelRouter from "./routes/parcelRoutes.js";
 import routeRouter from "./routes/routeRoutes.js";
+import rideRouter from "./routes/rideRoutes.js";
+
 app.use("/api/admin", adminRouter);
 app.use("/api/users", userRouter);
 app.use("/api/parcels", parcelRouter);
 app.use("/api/routes", routeRouter);
+app.use("/api/rides", rideRouter);
+
 export default app;

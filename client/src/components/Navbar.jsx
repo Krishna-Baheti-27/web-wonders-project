@@ -63,6 +63,12 @@ const Navbar = () => {
             Schedules
           </Link>
           <Link
+            to="/carpool"
+            className="hover:text-cyan text-gray-700 transition"
+          >
+            Car Pooling
+          </Link>
+          <Link
             to="/my-trips"
             className="hover:text-cyan text-gray-700 transition"
           >
@@ -129,6 +135,12 @@ const Navbar = () => {
             onClick={() => setIsOpen(false)}
           >
             Schedules
+          </Link>
+          <Link
+            to="/carpool"
+            className="hover:text-cyan text-gray-700 transition"
+          >
+            Car Pooling
           </Link>
           <Link
             to="/my-trips"

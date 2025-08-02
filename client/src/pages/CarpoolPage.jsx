@@ -1,0 +1,430 @@
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { DataContext } from "../context/Context.jsx";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+
+// --- Helper Icons ---
+const CarIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5 mr-2 text-gray-500"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 6.253v11.494m-9-5.494h18"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 17l-4 4m8-14l4-4m-4 4v14m0-14L5 5m14 14l-4-4"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 17l-4 4m8-14l4-4m-4 4v14m0-14L5 5m14 14l-4-4"
+    />
+  </svg>
+);
+const UserGroupIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5 mr-1"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+    />
+  </svg>
+);
+const ClockIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5 mr-2 text-gray-500"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
+  </svg>
+);
+const NoRidesIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="mx-auto h-16 w-16 text-blue-300"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+    />
+  </svg>
+);
+
+const API_URL = "http://localhost:4000/api/rides";
+
+// --- Ride Offer Form Component (Fully Implemented) ---
+const OfferRideForm = ({ onRidePosted }) => {
+  const { user } = useContext(DataContext);
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [departureTime, setDepartureTime] = useState("");
+  const [seatsAvailable, setSeatsAvailable] = useState(1);
+  const [notes, setNotes] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    if (!user?._id) {
+      setError("You must be logged in to offer a ride.");
+      return;
+    }
+    try {
+      const rideData = {
+        driver: user._id,
+        from,
+        to,
+        departureTime,
+        seatsAvailable,
+        notes,
+      };
+      await axios.post(API_URL, rideData);
+      setSuccess("Your ride has been posted successfully!");
+      setFrom("");
+      setTo("");
+      setDepartureTime("");
+      setSeatsAvailable(1);
+      setNotes("");
+      onRidePosted();
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to post ride.");
+    }
+  };
+
+  if (!user?._id) {
+    return (
+      <div className="bg-blue-50 text-center p-6 rounded-lg border border-blue-200">
+        <p className="font-semibold text-blue-800">
+          Please log in to offer a ride.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white p-8 rounded-xl shadow-lg">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Offer a Ride</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="From (e.g., Vesu)"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="text"
+            placeholder="To (e.g., Airport)"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="datetime-local"
+            value={departureTime}
+            onChange={(e) => setDepartureTime(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="number"
+            placeholder="Seats"
+            value={seatsAvailable}
+            onChange={(e) => setSeatsAvailable(e.target.value)}
+            min="1"
+            max="8"
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+        </div>
+        <textarea
+          placeholder="Additional notes (e.g., 'Small bags only')"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-lg"
+          rows="2"
+        ></textarea>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Post Ride Offer
+        </button>
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {success && (
+          <p className="text-green-500 text-sm text-center">{success}</p>
+        )}
+      </form>
+    </div>
+  );
+};
+
+// --- Available Ride Card Component ---
+const RideCard = ({ ride, currentUserId, onCancel, onAccept }) => {
+  const isDriver =
+    !!currentUserId &&
+    !!ride.driver?._id &&
+    String(currentUserId) === String(ride.driver._id);
+  const isBookedByCurrentUser = ride.acceptedBy === currentUserId;
+
+  const getStatusInfo = () => {
+    if (ride.status === "booked") {
+      if (isDriver)
+        return {
+          text: "Booked by Rider",
+          color: "bg-indigo-100 text-indigo-800",
+        };
+      if (isBookedByCurrentUser)
+        return { text: "You Accepted!", color: "bg-green-100 text-green-800" };
+    }
+    return {
+      text: `${ride.seatsAvailable} Seat${ride.seatsAvailable > 1 ? "s" : ""}`,
+      color: "bg-gray-100 text-gray-800",
+    };
+  };
+
+  const statusInfo = getStatusInfo();
+
+  return (
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col justify-between">
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <p className="font-bold text-lg text-gray-800">
+            {ride.from} → {ride.to}
+          </p>
+          <div
+            className={`flex items-center text-sm font-semibold px-3 py-1 rounded-full ${statusInfo.color}`}
+          >
+            {statusInfo.text}
+          </div>
+        </div>
+        <div className="text-gray-600 space-y-2">
+          <p className="flex items-center">
+            <ClockIcon />{" "}
+            {new Date(ride.departureTime).toLocaleString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+            })}
+          </p>
+          <p className="flex items-center">
+            <CarIcon /> Driver:{" "}
+            <span className="font-semibold ml-1">{ride.driver.name}</span>
+          </p>
+          {ride.notes && (
+            <p className="text-sm pt-2 border-t border-gray-200 mt-2">
+              Notes: "{ride.notes}"
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="mt-4">
+        {isDriver && ride.status === "active" && (
+          <button
+            onClick={() => onCancel(ride._id)}
+            className="w-full bg-red-100 text-red-700 text-sm font-bold py-2 px-4 rounded-lg hover:bg-red-200 transition-colors"
+          >
+            Cancel My Offer
+          </button>
+        )}
+        {!isDriver && ride.status === "active" && (
+          <button
+            onClick={() => onAccept(ride._id)}
+            className="w-full bg-green-500 text-white text-sm font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+          >
+            Accept Ride
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// --- Main Carpool Page Component ---
+const CarpoolPage = () => {
+  const [allRides, setAllRides] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useContext(DataContext);
+
+  const fetchRides = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(API_URL);
+      setAllRides(response.data);
+    } catch (error) {
+      console.error("Failed to fetch rides:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRides();
+  }, []);
+
+  // --- handleCancelRide (Fully Implemented) ---
+  const handleCancelRide = async (rideId) => {
+    if (!user?._id) {
+      alert("You must be logged in to cancel a ride.");
+      return;
+    }
+    if (
+      window.confirm(
+        "Are you sure you want to permanently delete this ride offer?"
+      )
+    ) {
+      try {
+        await axios.delete(`${API_URL}/${rideId}`, {
+          data: { userId: user._id },
+        });
+        fetchRides();
+      } catch (error) {
+        console.error("Failed to delete ride:", error);
+        alert("Could not delete the ride. Please try again.");
+      }
+    }
+  };
+
+  const handleAcceptRide = async (rideId) => {
+    if (!user?._id) {
+      alert("You must be logged in to accept a ride.");
+      return;
+    }
+    try {
+      await axios.patch(`${API_URL}/${rideId}/accept`, { userId: user._id });
+      fetchRides();
+    } catch (error) {
+      console.error("Failed to accept ride:", error);
+      alert(
+        error.response?.data?.message ||
+          "Could not accept the ride. It may no longer be available."
+      );
+    }
+  };
+
+  const myRideOffers = allRides.filter(
+    (ride) => ride.driver?._id && String(ride.driver._id) === String(user?._id)
+  );
+  const otherRides = allRides.filter(
+    (ride) => ride.driver?._id && String(ride.driver._id) !== String(user?._id)
+  );
+
+  return (
+    <>
+      <Navbar />
+      <div className="bg-gray-50 min-h-screen">
+        <main className="container mx-auto px-4 py-12">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-extrabold text-gray-800 mb-4">
+              Community Carpool
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Share a ride with fellow commuters. Offer a ride or find one that
+              suits you.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+            <div className="lg:col-span-2">
+              <OfferRideForm onRidePosted={fetchRides} />
+            </div>
+            <div className="lg:col-span-3">
+              {user?._id && myRideOffers.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">
+                    My Active Offers
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {myRideOffers.map((ride) => (
+                      <RideCard
+                        key={ride._id}
+                        ride={ride}
+                        currentUserId={user?._id}
+                        onCancel={handleCancelRide}
+                        onAccept={handleAcceptRide}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">
+                Available Rides from Others
+              </h2>
+              {loading ? (
+                <p>Loading available rides...</p>
+              ) : otherRides.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {otherRides.map((ride) => (
+                    <RideCard
+                      key={ride._id}
+                      ride={ride}
+                      currentUserId={user?._id}
+                      onCancel={handleCancelRide}
+                      onAccept={handleAcceptRide}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 px-6 bg-white rounded-lg shadow-md">
+                  <NoRidesIcon />
+                  <h2 className="text-2xl font-semibold text-gray-700 mt-4">
+                    No Other Rides Found
+                  </h2>
+                  <p className="text-gray-500 mt-2">
+                    There are no other active rides available right now. Be the
+                    first to offer one!
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </main>
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+export default CarpoolPage;

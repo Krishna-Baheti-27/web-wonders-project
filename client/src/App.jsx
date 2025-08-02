@@ -14,6 +14,7 @@ import Context from "./context/Context.jsx";
 import AOS from "aos";
 import { useEffect } from "react";
 import Schedules from "./pages/Schedules.jsx";
+import CarpoolPage from "./pages/CarpoolPage.jsx";
 
 function App() {
   useEffect(() => {
@@ -48,6 +49,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Schedules />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/carpool"
+            element={
+              <PrivateRoute>
+                <CarpoolPage />
               </PrivateRoute>
             }
           />
