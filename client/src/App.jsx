@@ -10,6 +10,7 @@ import Signup from "./pages/users/Signup.jsx";
 import Login from "./pages/users/Login.jsx";
 import Logout from "./pages/users/Logout.jsx";
 import { PrivateRoute, NotPrivateRoute } from "./components/PrivateRoute.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 import Context from "./context/Context.jsx";
 import AOS from "aos";
 import { useEffect } from "react";
@@ -47,6 +48,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <LiveMap />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
                 </PrivateRoute>
               }
             />

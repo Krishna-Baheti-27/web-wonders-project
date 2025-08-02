@@ -1,24 +1,16 @@
 import Alert from "../models/alert.js";
+import mongoose from "mongoose";
 
-// @desc    Create a new alert
-// @route   POST /api/alerts
-// @access  Admin (for now, public for testing)
+// --- createAlert (no changes) ---
 export const createAlert = async (req, res) => {
   try {
     const { title, message, priority } = req.body;
-
     if (!title || !message || !priority) {
       return res
         .status(400)
         .json({ message: "Title, message, and priority are required." });
     }
-
-    const newAlert = new Alert({
-      title,
-      message,
-      priority,
-    });
-
+    const newAlert = new Alert({ title, message, priority });
     const savedAlert = await newAlert.save();
     res
       .status(201)
@@ -29,9 +21,7 @@ export const createAlert = async (req, res) => {
   }
 };
 
-// @desc    Get all currently active alerts
-// @route   GET /api/alerts/active
-// @access  Public
+// --- getActiveAlerts (no changes) ---
 export const getActiveAlerts = async (req, res) => {
   try {
     const activeAlerts = await Alert.find({ status: "active" }).sort({
@@ -46,9 +36,7 @@ export const getActiveAlerts = async (req, res) => {
   }
 };
 
-// @desc    Get all alerts (active and inactive)
-// @route   GET /api/alerts
-// @access  Admin
+// --- getAllAlerts (no changes) ---
 export const getAllAlerts = async (req, res) => {
   try {
     const allAlerts = await Alert.find({}).sort({ createdAt: -1 });
@@ -61,14 +49,11 @@ export const getAllAlerts = async (req, res) => {
   }
 };
 
-// @desc    Update an alert's status
-// @route   PATCH /api/alerts/:id
-// @access  Admin
+// --- updateAlertStatus (no changes) ---
 export const updateAlertStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-
     if (!status || !["active", "inactive"].includes(status)) {
       return res
         .status(400)
@@ -76,26 +61,71 @@ export const updateAlertStatus = async (req, res) => {
           message: "Invalid status provided. Must be 'active' or 'inactive'.",
         });
     }
-
-    const alert = await Alert.findById(id);
-
+    const alert = await Alert.findByIdAndUpdate(id, { status }, { new: true });
     if (!alert) {
       return res.status(404).json({ message: "Alert not found." });
     }
-
-    alert.status = status;
-    const updatedAlert = await alert.save();
-
     res
       .status(200)
-      .json({
-        message: `Alert status updated to '${status}'.`,
-        alert: updatedAlert,
-      });
+      .json({ message: `Alert status updated to '${status}'.`, alert });
   } catch (error) {
     console.error("Error updating alert status:", error);
     res
       .status(500)
       .json({ message: "Server error while updating alert status." });
+  }
+};
+
+// --- NEW FUNCTION: Update an alert's content ---
+export const updateAlert = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, message, priority } = req.body;
+
+    if (!title || !message || !priority) {
+      return res
+        .status(400)
+        .json({
+          message: "Title, message, and priority are required for an update.",
+        });
+    }
+
+    const updatedAlert = await Alert.findByIdAndUpdate(
+      id,
+      { title, message, priority },
+      { new: true, runValidators: true } // 'new: true' returns the updated document
+    );
+
+    if (!updatedAlert) {
+      return res.status(404).json({ message: "Alert not found." });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Alert content updated successfully.",
+        alert: updatedAlert,
+      });
+  } catch (error) {
+    console.error("Error updating alert:", error);
+    res.status(500).json({ message: "Server error while updating alert." });
+  }
+};
+
+// --- NEW FUNCTION: Delete an alert ---
+export const deleteAlert = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const alert = await Alert.findByIdAndDelete(id);
+
+    if (!alert) {
+      return res.status(404).json({ message: "Alert not found." });
+    }
+
+    res.status(200).json({ message: "Alert deleted permanently." });
+  } catch (error) {
+    console.error("Error deleting alert:", error);
+    res.status(500).json({ message: "Server error while deleting alert." });
   }
 };

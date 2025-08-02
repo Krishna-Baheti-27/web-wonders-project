@@ -82,6 +82,12 @@ const Navbar = () => {
             My Orders
           </Link>
           <Link
+            to="/admin/dashboard"
+            className="hover:text-cyan text-gray-700 transition"
+          >
+            Admin
+          </Link>
+          <Link
             to="/parcel"
             className="hover:text-cyan text-gray-700 transition"
           >
