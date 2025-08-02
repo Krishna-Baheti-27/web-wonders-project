@@ -2,10 +2,9 @@ import mongoose from "mongoose";
 
 const parcelSchema = new mongoose.Schema(
   {
-    // This new field will store the ID of the user who created the parcel.
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // This tells Mongoose to link to the 'User' model
+      ref: "User",
       required: true,
     },
     senderName: {
@@ -43,6 +42,12 @@ const parcelSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "in-transit", "delivered", "cancelled"],
       default: "pending",
+    },
+    // --- NEW FIELD for the admin's custom message ---
+    adminTag: {
+      type: String,
+      trim: true,
+      default: "", // Defaults to an empty string
     },
   },
   {

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-// Note: Navbar and Footer are removed as they are now in App.jsx
 
+// API Endpoints
 const ALERTS_API_URL = "http://localhost:4000/api/alerts";
 const TRIPS_API_URL = "http://localhost:4000/api/trips";
+const PARCELS_API_URL = "http://localhost:4000/api/parcels";
 
 // --- Form for creating and editing alerts ---
 const AlertForm = ({ onAlertSaved, editingAlert, setEditingAlert }) => {
@@ -229,23 +230,94 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
   );
 };
 
+// --- Component to manage a single parcel (UI IMPROVED) ---
+const ParcelManagerCard = ({ parcel, onUpdate }) => {
+  const [status, setStatus] = useState(parcel.status);
+  const [adminTag, setAdminTag] = useState(parcel.adminTag);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await onUpdate(parcel._id, { status, adminTag });
+    } catch (error) {
+      console.error("Failed to update parcel", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6 space-y-4 flex flex-col">
+      <div className="flex-grow">
+        <p className="font-bold text-lg">
+          {parcel.source} → {parcel.destination}
+        </p>
+        <p className="text-sm text-gray-500">
+          User: {parcel.user.name} ({parcel.user.email})
+        </p>
+        <p className="text-xs text-gray-400">Order ID: {parcel._id}</p>
+      </div>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Update Status
+          </label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="pending">Pending</option>
+            <option value="in-transit">In-Transit</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Admin Tag / Message
+          </label>
+          <input
+            type="text"
+            value={adminTag}
+            onChange={(e) => setAdminTag(e.target.value)}
+            placeholder="e.g., Arriving in 15 mins"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+      <button
+        onClick={handleSave}
+        disabled={isSaving}
+        className="mt-4 w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-indigo-400"
+      >
+        {isSaving ? "Saving..." : "Save Changes"}
+      </button>
+    </div>
+  );
+};
+
 // --- Main Admin Dashboard Page ---
 const AdminDashboard = () => {
   const [alerts, setAlerts] = useState([]);
   const [editingAlert, setEditingAlert] = useState(null);
   const [trips, setTrips] = useState([]);
   const [editingTrip, setEditingTrip] = useState(null);
+  const [parcels, setParcels] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      const [alertsRes, tripsRes] = await Promise.all([
+      const [alertsRes, tripsRes, parcelsRes] = await Promise.all([
         axios.get(ALERTS_API_URL),
         axios.get(TRIPS_API_URL),
+        axios.get(`${PARCELS_API_URL}/all`),
       ]);
       setAlerts(alertsRes.data);
       setTrips(tripsRes.data);
+      setParcels(parcelsRes.data);
     } catch (error) {
       console.error("Failed to fetch admin data:", error);
     } finally {
@@ -295,6 +367,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleUpdateParcel = async (parcelId, updateData) => {
+    try {
+      await axios.patch(`${PARCELS_API_URL}/${parcelId}/admin`, updateData);
+      fetchAllData();
+    } catch (error) {
+      console.error("Failed to update parcel:", error);
+      throw error;
+    }
+  };
+
   const getPriorityColor = (priority) => {
     if (priority === "Critical") return "border-red-500";
     if (priority === "Warning") return "border-yellow-500";
@@ -302,118 +384,138 @@ const AdminDashboard = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="bg-gray-50 min-h-screen">
-        <main className="container mx-auto px-4 py-12">
-          <h1 className="text-4xl font-extrabold text-gray-800 mb-10">
-            Admin Dashboard
-          </h1>
+    <div className="bg-gray-50 min-h-screen">
+      <main className="container mx-auto px-4 py-12">
+        <h1 className="text-4xl font-extrabold text-gray-800 mb-10">
+          Admin Dashboard
+        </h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Column 1: Trips Management */}
-            <div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                Manage Trips
-              </h2>
-              <TripForm
-                onTripSaved={fetchAllData}
-                editingTrip={editingTrip}
-                setEditingTrip={setEditingTrip}
-              />
-              <div className="space-y-4">
-                {trips.map((trip) => (
-                  <div
-                    key={trip._id}
-                    className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between"
-                  >
-                    <div>
-                      <p className="font-bold text-lg">{trip.name}</p>
-                      <p className="text-gray-600 text-sm">
-                        {trip.description}
-                      </p>
-                    </div>
-                    <div className="flex gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => setEditingTrip(trip)}
-                        className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteTrip(trip._id)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                      >
-                        Delete
-                      </button>
-                    </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+          {/* Column 1: Trips Management */}
+          <div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              Manage Trips
+            </h2>
+            <TripForm
+              onTripSaved={fetchAllData}
+              editingTrip={editingTrip}
+              setEditingTrip={setEditingTrip}
+            />
+            <div className="space-y-4">
+              {trips.map((trip) => (
+                <div
+                  key={trip._id}
+                  className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between"
+                >
+                  <div>
+                    <p className="font-bold text-lg">{trip.name}</p>
+                    <p className="text-gray-600 text-sm">{trip.description}</p>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Column 2: Alerts Management */}
-            <div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                Manage Service Alerts
-              </h2>
-              <AlertForm
-                onAlertSaved={fetchAllData}
-                editingAlert={editingAlert}
-                setEditingAlert={setEditingAlert}
-              />
-              <div className="space-y-4">
-                {alerts.map((alert) => (
-                  <div
-                    key={alert._id}
-                    className={`bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row items-start md:items-center justify-between border-l-4 ${getPriorityColor(
-                      alert.priority
-                    )}`}
-                  >
-                    <div className="flex-1 mb-4 md:mb-0">
-                      <p className="font-bold text-lg">
-                        {alert.title}{" "}
-                        <span
-                          className={`text-sm font-semibold ml-2 px-2 py-0.5 rounded-full ${
-                            alert.status === "active"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {alert.status}
-                        </span>
-                      </p>
-                      <p className="text-gray-600">{alert.message}</p>
-                    </div>
-                    <div className="flex gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => handleToggleAlertStatus(alert)}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg text-sm"
-                      >
-                        Toggle Status
-                      </button>
-                      <button
-                        onClick={() => setEditingAlert(alert)}
-                        className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteAlert(alert._id)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => setEditingTrip(trip)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteTrip(trip._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                    >
+                      Delete
+                    </button>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-        </main>
-        <Footer />
-      </div>
-    </>
+
+          {/* Column 2: Alerts Management */}
+          <div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              Manage Service Alerts
+            </h2>
+            <AlertForm
+              onAlertSaved={fetchAllData}
+              editingAlert={editingAlert}
+              setEditingAlert={setEditingAlert}
+            />
+            <div className="space-y-4">
+              {alerts.map((alert) => (
+                <div
+                  key={alert._id}
+                  className={`bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row items-start md:items-center justify-between border-l-4 ${getPriorityColor(
+                    alert.priority
+                  )}`}
+                >
+                  <div className="flex-1 mb-4 md:mb-0">
+                    <p className="font-bold text-lg">
+                      {alert.title}{" "}
+                      <span
+                        className={`text-sm font-semibold ml-2 px-2 py-0.5 rounded-full ${
+                          alert.status === "active"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {alert.status}
+                      </span>
+                    </p>
+                    <p className="text-gray-600">{alert.message}</p>
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => handleToggleAlertStatus(alert)}
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg text-sm"
+                    >
+                      Toggle Status
+                    </button>
+                    <button
+                      onClick={() => setEditingAlert(alert)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteAlert(alert._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* --- Full-width Parcel Management Section --- */}
+        <div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            Manage Parcel Orders
+          </h2>
+          {loading ? (
+            <p>Loading parcel orders...</p>
+          ) : parcels.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {parcels.map((parcel) => (
+                <ParcelManagerCard
+                  key={parcel._id}
+                  parcel={parcel}
+                  onUpdate={handleUpdateParcel}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg shadow-md p-8 text-center">
+              <p className="text-gray-500">
+                No pending parcel orders to manage.
+              </p>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
   );
 };
 

@@ -3,19 +3,27 @@ import {
   calculateFare,
   createBooking,
   getUserOrders,
+  getAllParcels, // <-- 1. Import new admin function
+  updateParcelByAdmin, // <-- 2. Import new admin function
 } from "../controllers/parcelController.js";
-// import { protect } from '../middlewares/userMiddleware.js'; // Optional: Protect routes
 
 const router = express.Router();
 
-// Calculate parcel fare
+// --- USER-FACING ROUTES ---
 router.post("/fare", calculateFare);
-
-// Create a new parcel booking
 router.post("/book", createBooking);
-
-// NEW: Get all orders for a specific user
-// The ':userId' is a URL parameter that will contain the user's ID
 router.get("/user/:userId", getUserOrders);
+
+// --- NEW ADMIN ROUTES ---
+
+// @route   GET /api/parcels/all
+// @desc    Get all parcels from all users (for admin dashboard)
+// @access  Admin
+router.get("/all", getAllParcels);
+
+// @route   PATCH /api/parcels/:id/admin
+// @desc    Update a parcel's status and tag (by admin)
+// @access  Admin
+router.patch("/:id/admin", updateParcelByAdmin);
 
 export default router;
