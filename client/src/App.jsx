@@ -21,6 +21,7 @@ import CarpoolPage from "./pages/CarpoolPage.jsx";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer.jsx";
 import AlertBanner from "./components/AlertBanner";
+import TripViewPage from "./pages/TripView.jsx";
 
 function App() {
   useEffect(() => {
@@ -104,6 +105,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Parcel />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/my-trips/:id"
+              element={
+                <PrivateRoute>
+                  <TripViewPage />
                 </PrivateRoute>
               }
             />

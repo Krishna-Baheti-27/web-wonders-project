@@ -3,13 +3,13 @@ import axios from "axios";
 import { Clock, DollarSign, ArrowRight, Heart } from "lucide-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
 // Removed unused imports and Navbar/Footer as they are in App.jsx now
 
 const MyTripsPage = () => {
   const [trips, setTrips] = useState([]); // State for trips from API
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedTrip, setSelectedTrip] = useState(null);
   const [likedTrips, setLikedTrips] = useState([]);
 
   // Fetch trips from the API when the component mounts
@@ -114,13 +114,13 @@ const MyTripsPage = () => {
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => setSelectedTrip(trip)}
+                    <Link
+                      to={trip._id}
                       className="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
                     >
                       <span>Select Trip</span>
                       <ArrowRight className="h-4 w-4" />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               ))}

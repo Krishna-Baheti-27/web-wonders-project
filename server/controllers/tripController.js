@@ -45,6 +45,18 @@ export const getAllTrips = async (req, res) => {
   }
 };
 
+
+export const getTrip = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const trip = await Trip.findById(id);
+    res.status(200).json(trip);
+  } catch (error) {
+    console.error("Error fetching trip:", error);
+    res.status(500).json({ message: "Server error while fetching trip." });
+  }
+};
+
 // @desc    Update an existing trip
 // @route   PUT /api/trips/:id
 // @access  Admin

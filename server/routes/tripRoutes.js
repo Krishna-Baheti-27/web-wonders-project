@@ -4,6 +4,7 @@ import {
   getAllTrips,
   updateTrip,
   deleteTrip,
+  getTrip
 } from "../controllers/tripController.js";
 
 const router = express.Router();
@@ -12,6 +13,8 @@ const router = express.Router();
 // @desc    Get all trips
 // @access  Public
 router.get("/", getAllTrips);
+
+router.get("/:id", getTrip);
 
 // @route   POST /api/trips
 // @desc    Create a new trip
