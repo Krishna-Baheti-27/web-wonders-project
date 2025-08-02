@@ -7,11 +7,16 @@ const rideSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    // --- NEW FIELD to track who accepted the ride ---
+    // --- NEW FIELD for the driver's contact number ---
+    driverPhone: {
+      type: String,
+      required: [true, "A contact number is required for the driver."],
+      trim: true,
+    },
     acceptedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default: null, // It's null until someone accepts
+      default: null,
     },
     from: {
       type: String,
@@ -40,7 +45,7 @@ const rideSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["active", "booked", "completed", "cancelled"], // Added 'booked' status
+      enum: ["active", "booked", "completed", "cancelled"],
       default: "active",
     },
   },

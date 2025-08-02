@@ -81,16 +81,33 @@ const NoRidesIcon = () => (
     />
   </svg>
 );
+const PhoneIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5 mr-2 text-gray-500"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+    />
+  </svg>
+);
 
 const API_URL = "http://localhost:4000/api/rides";
 
-// --- Ride Offer Form Component (Fully Implemented) ---
+// --- Ride Offer Form Component ---
 const OfferRideForm = ({ onRidePosted }) => {
   const { user } = useContext(DataContext);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [departureTime, setDepartureTime] = useState("");
   const [seatsAvailable, setSeatsAvailable] = useState(1);
+  const [driverPhone, setDriverPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -110,6 +127,7 @@ const OfferRideForm = ({ onRidePosted }) => {
         to,
         departureTime,
         seatsAvailable,
+        driverPhone,
         notes,
       };
       await axios.post(API_URL, rideData);
@@ -119,6 +137,7 @@ const OfferRideForm = ({ onRidePosted }) => {
       setDepartureTime("");
       setSeatsAvailable(1);
       setNotes("");
+      setDriverPhone("");
       onRidePosted();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to post ride.");
@@ -176,6 +195,14 @@ const OfferRideForm = ({ onRidePosted }) => {
             className="w-full p-3 border border-gray-300 rounded-lg"
           />
         </div>
+        <input
+          type="tel"
+          placeholder="Your Contact Number"
+          value={driverPhone}
+          onChange={(e) => setDriverPhone(e.target.value)}
+          required
+          className="w-full p-3 border border-gray-300 rounded-lg"
+        />
         <textarea
           placeholder="Additional notes (e.g., 'Small bags only')"
           value={notes}
@@ -198,31 +225,12 @@ const OfferRideForm = ({ onRidePosted }) => {
   );
 };
 
-// --- Available Ride Card Component ---
+// --- Ride Card Component ---
 const RideCard = ({ ride, currentUserId, onCancel, onAccept }) => {
   const isDriver =
     !!currentUserId &&
     !!ride.driver?._id &&
     String(currentUserId) === String(ride.driver._id);
-  const isBookedByCurrentUser = ride.acceptedBy === currentUserId;
-
-  const getStatusInfo = () => {
-    if (ride.status === "booked") {
-      if (isDriver)
-        return {
-          text: "Booked by Rider",
-          color: "bg-indigo-100 text-indigo-800",
-        };
-      if (isBookedByCurrentUser)
-        return { text: "You Accepted!", color: "bg-green-100 text-green-800" };
-    }
-    return {
-      text: `${ride.seatsAvailable} Seat${ride.seatsAvailable > 1 ? "s" : ""}`,
-      color: "bg-gray-100 text-gray-800",
-    };
-  };
-
-  const statusInfo = getStatusInfo();
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col justify-between">
@@ -231,10 +239,9 @@ const RideCard = ({ ride, currentUserId, onCancel, onAccept }) => {
           <p className="font-bold text-lg text-gray-800">
             {ride.from} → {ride.to}
           </p>
-          <div
-            className={`flex items-center text-sm font-semibold px-3 py-1 rounded-full ${statusInfo.color}`}
-          >
-            {statusInfo.text}
+          <div className="flex items-center bg-gray-100 text-gray-800 text-sm font-semibold px-3 py-1 rounded-full">
+            <UserGroupIcon /> {ride.seatsAvailable} Seat
+            {ride.seatsAvailable > 1 ? "s" : ""}
           </div>
         </div>
         <div className="text-gray-600 space-y-2">
@@ -260,15 +267,14 @@ const RideCard = ({ ride, currentUserId, onCancel, onAccept }) => {
         </div>
       </div>
       <div className="mt-4">
-        {isDriver && ride.status === "active" && (
+        {isDriver ? (
           <button
             onClick={() => onCancel(ride._id)}
             className="w-full bg-red-100 text-red-700 text-sm font-bold py-2 px-4 rounded-lg hover:bg-red-200 transition-colors"
           >
             Cancel My Offer
           </button>
-        )}
-        {!isDriver && ride.status === "active" && (
+        ) : (
           <button
             onClick={() => onAccept(ride._id)}
             className="w-full bg-green-500 text-white text-sm font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
@@ -281,17 +287,61 @@ const RideCard = ({ ride, currentUserId, onCancel, onAccept }) => {
   );
 };
 
+// --- Accepted Ride Card Component ---
+const AcceptedRideCard = ({ ride }) => (
+  <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+    <div className="flex justify-between items-center mb-4">
+      <p className="font-bold text-lg text-gray-800">
+        {ride.from} → {ride.to}
+      </p>
+      <div className="flex items-center bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full">
+        Ride Accepted!
+      </div>
+    </div>
+    <div className="text-gray-600 space-y-2">
+      <p className="flex items-center">
+        <ClockIcon />{" "}
+        {new Date(ride.departureTime).toLocaleString("en-US", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        })}
+      </p>
+      <p className="flex items-center">
+        <CarIcon /> Driver:{" "}
+        <span className="font-semibold ml-1">{ride.driver.name}</span>
+      </p>
+      <p className="flex items-center font-semibold text-gray-800">
+        <PhoneIcon /> {ride.driverPhone}
+      </p>
+      {ride.notes && (
+        <p className="text-sm pt-2 border-t border-gray-200 mt-2">
+          Notes: "{ride.notes}"
+        </p>
+      )}
+    </div>
+  </div>
+);
+
 // --- Main Carpool Page Component ---
 const CarpoolPage = () => {
-  const [allRides, setAllRides] = useState([]);
+  const [activeRides, setActiveRides] = useState([]);
+  const [acceptedRides, setAcceptedRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(DataContext);
 
-  const fetchRides = async () => {
+  const fetchAllRides = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axios.get(API_URL);
-      setAllRides(response.data);
+      const activeRes = await axios.get(API_URL);
+      setActiveRides(activeRes.data);
+
+      if (user?._id) {
+        const acceptedRes = await axios.get(`${API_URL}/accepted/${user._id}`);
+        setAcceptedRides(acceptedRes.data);
+      }
     } catch (error) {
       console.error("Failed to fetch rides:", error);
     } finally {
@@ -300,8 +350,8 @@ const CarpoolPage = () => {
   };
 
   useEffect(() => {
-    fetchRides();
-  }, []);
+    fetchAllRides();
+  }, [user]);
 
   // --- handleCancelRide (Fully Implemented) ---
   const handleCancelRide = async (rideId) => {
@@ -315,10 +365,11 @@ const CarpoolPage = () => {
       )
     ) {
       try {
+        // Use axios.delete and pass userId in the data property for the body
         await axios.delete(`${API_URL}/${rideId}`, {
           data: { userId: user._id },
         });
-        fetchRides();
+        fetchAllRides();
       } catch (error) {
         console.error("Failed to delete ride:", error);
         alert("Could not delete the ride. Please try again.");
@@ -326,6 +377,7 @@ const CarpoolPage = () => {
     }
   };
 
+  // --- handleAcceptRide (Fully Implemented) ---
   const handleAcceptRide = async (rideId) => {
     if (!user?._id) {
       alert("You must be logged in to accept a ride.");
@@ -333,7 +385,7 @@ const CarpoolPage = () => {
     }
     try {
       await axios.patch(`${API_URL}/${rideId}/accept`, { userId: user._id });
-      fetchRides();
+      fetchAllRides();
     } catch (error) {
       console.error("Failed to accept ride:", error);
       alert(
@@ -343,16 +395,16 @@ const CarpoolPage = () => {
     }
   };
 
-  const myRideOffers = allRides.filter(
+  const myRideOffers = activeRides.filter(
     (ride) => ride.driver?._id && String(ride.driver._id) === String(user?._id)
   );
-  const otherRides = allRides.filter(
+  const otherRides = activeRides.filter(
     (ride) => ride.driver?._id && String(ride.driver._id) !== String(user?._id)
   );
 
   return (
     <>
-    <Navbar/>
+      <Navbar />
       <div className="bg-gray-50 min-h-screen">
         <main className="container mx-auto px-4 py-12">
           <div className="text-center mb-12">
@@ -360,16 +412,28 @@ const CarpoolPage = () => {
               Community Carpool
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Share a ride with fellow commuters. Offer a ride or find one that
-              suits you.
+              Share a ride with fellow commuters.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             <div className="lg:col-span-2">
-              <OfferRideForm onRidePosted={fetchRides} />
+              <OfferRideForm onRidePosted={fetchAllRides} />
             </div>
             <div className="lg:col-span-3">
+              {user?._id && acceptedRides.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">
+                    My Accepted Rides
+                  </h2>
+                  <div className="space-y-6">
+                    {acceptedRides.map((ride) => (
+                      <AcceptedRideCard key={ride._id} ride={ride} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {user?._id && myRideOffers.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 pb-2">
@@ -393,7 +457,7 @@ const CarpoolPage = () => {
                 Available Rides from Others
               </h2>
               {loading ? (
-                <p>Loading available rides...</p>
+                <p>Loading...</p>
               ) : otherRides.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {otherRides.map((ride) => (
@@ -413,8 +477,7 @@ const CarpoolPage = () => {
                     No Other Rides Found
                   </h2>
                   <p className="text-gray-500 mt-2">
-                    There are no other active rides available right now. Be the
-                    first to offer one!
+                    There are no other active rides available right now.
                   </p>
                 </div>
               )}
@@ -422,7 +485,7 @@ const CarpoolPage = () => {
           </div>
         </main>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };
