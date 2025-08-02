@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/", getActiveRides);
 router.post("/", createRide);
-router.patch("/:rideId/cancel", cancelRide);
+router.delete("/:rideId/cancel", cancelRide);
 router.patch("/:rideId/accept", acceptRide);
 
 // --- 2. NEW ROUTE for fetching rides a user has accepted ---

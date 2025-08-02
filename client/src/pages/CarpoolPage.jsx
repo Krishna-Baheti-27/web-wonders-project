@@ -366,7 +366,7 @@ const CarpoolPage = () => {
     ) {
       try {
         // Use axios.delete and pass userId in the data property for the body
-        await axios.delete(`${API_URL}/${rideId}`, {
+        await axios.delete(`${API_URL}/${rideId}/cancel`, {
           data: { userId: user._id },
         });
         fetchAllRides();
