@@ -1,9 +1,10 @@
+import mongoose from "mongoose"; // Import mongoose to use ObjectId
 import Parcel from "../models/parcel.js";
 import Route from "../models/route.js";
 
-// --- Helper function to calculate distance ---
+// --- Helper functions (no changes) ---
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of the earth in km
+  const R = 6371;
   const dLat = deg2rad(lat2 - lat1);
   const dLon = deg2rad(lon2 - lon1);
   const a =
@@ -13,29 +14,23 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c; // Distance in km
-  return distance;
+  return R * c;
 }
-
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
-// --- Controller to calculate fare ---
+// --- calculateFare (no changes) ---
 export const calculateFare = async (req, res) => {
   try {
     const { source, destination, weight } = req.body;
-
     if (!source || !destination || !weight) {
       return res
         .status(400)
         .json({ message: "Source, destination, and weight are required." });
     }
-
     const routes = await Route.find({}).lean();
-
     let sourceStop, destinationStop;
-
     for (const route of routes) {
       if (!sourceStop) {
         sourceStop = route.stops.find(
@@ -51,7 +46,6 @@ export const calculateFare = async (req, res) => {
       }
       if (sourceStop && destinationStop) break;
     }
-
     if (!sourceStop || !destinationStop) {
       return res
         .status(404)
@@ -59,31 +53,19 @@ export const calculateFare = async (req, res) => {
           message: "Could not find one or both locations on our routes.",
         });
     }
-
     const distance = getDistanceFromLatLonInKm(
       sourceStop.lat,
       sourceStop.lng,
       destinationStop.lat,
       destinationStop.lng
     );
-
-    // --- FARE CALCULATION IN DOLLARS ---
-    const baseFare = 5;
-    const ratePerKm = 1.5;
-    const ratePerKg = 2;
-    const calculatedFareInUSD =
-      baseFare + distance * ratePerKm + parseFloat(weight) * ratePerKg;
-
-    // --- CONVERT TO RUPEES ---
-    const CONVERSION_RATE = 80;
-    const calculatedFareInINR = calculatedFareInUSD * CONVERSION_RATE;
-
+    const calculatedFareInUSD = 5 + distance * 1.5 + parseFloat(weight) * 2;
+    const calculatedFareInINR = calculatedFareInUSD * 80;
     if (isNaN(calculatedFareInINR)) {
       return res
         .status(500)
         .json({ message: "Fare calculation resulted in an error." });
     }
-
     res.status(200).json({ fare: calculatedFareInINR.toFixed(2) });
   } catch (error) {
     console.error("Fare Calculation Error:", error);
@@ -91,10 +73,11 @@ export const calculateFare = async (req, res) => {
   }
 };
 
-// --- Controller to create a booking ---
+// --- createBooking (UPDATED WITH DEBUGGING) ---
 export const createBooking = async (req, res) => {
   try {
     const {
+      userId,
       senderName,
       senderPhone,
       source,
@@ -103,8 +86,8 @@ export const createBooking = async (req, res) => {
       weight,
       fare,
     } = req.body;
-
     if (
+      !userId ||
       !senderName ||
       !senderPhone ||
       !source ||
@@ -118,7 +101,13 @@ export const createBooking = async (req, res) => {
         .json({ message: "Missing required fields for booking." });
     }
 
+    console.log(
+      "--- DEBUG (createBooking): Received userId from body:",
+      userId
+    );
+
     const newParcel = new Parcel({
+      user: userId,
       senderName,
       senderPhone,
       source,
@@ -129,20 +118,60 @@ export const createBooking = async (req, res) => {
       status: "pending",
     });
 
+    console.log(
+      "--- DEBUG (createBooking): 'user' field on newParcel instance before save:",
+      newParcel.user
+    );
+
     const savedParcel = await newParcel.save();
-
-    // --- DEBUGGING LOG ---
-    // This will show us the exact document that was saved to the database.
     console.log("Parcel saved successfully:", savedParcel);
-    // --- END DEBUGGING LOG ---
-
-    res.status(201).json({
-      message: "Booking created successfully!",
-      booking: savedParcel,
-    });
+    res
+      .status(201)
+      .json({ message: "Booking created successfully!", booking: savedParcel });
   } catch (error) {
-    // If there's an error during save, this will catch it.
     console.error("Create Booking Error:", error);
     res.status(500).json({ message: "Server error while creating booking." });
+  }
+};
+
+// --- getUserOrders (UPDATED WITH DEEPER DEBUGGING) ---
+export const getUserOrders = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    console.log(
+      "--- DEBUG: Fetching orders for userId from URL parameter:",
+      userId
+    );
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    console.log("--- DEBUG: Converted userObjectId for query:", userObjectId);
+
+    const orders = await Parcel.find({ user: userObjectId }).sort({
+      createdAt: -1,
+    });
+
+    // --- NEW DEEPER DEBUGGING ---
+    // This query will fetch EVERYTHING from the collection so we can inspect the data.
+    const allParcelsInDB = await Parcel.find({}).lean();
+    console.log(
+      "--- DEBUG: ALL parcels currently in the database:",
+      JSON.stringify(allParcelsInDB, null, 2)
+    );
+    // --- END NEW DEBUGGING ---
+
+    console.log(
+      "--- DEBUG: Number of orders found for this user:",
+      orders.length
+    );
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Get User Orders Error:", error);
+    res.status(500).json({ message: "Server error while fetching orders." });
   }
 };

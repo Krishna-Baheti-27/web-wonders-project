@@ -5,6 +5,7 @@ import LiveMap from "./pages/LiveMap.jsx";
 import Contact from "./pages/Contact.jsx";
 import MyTrips from "./pages/MyTrips.jsx";
 import Parcel from "./pages/Parcel.jsx";
+import Orders from "./pages/Orders.jsx";
 import Signup from "./pages/users/Signup.jsx";
 import Login from "./pages/users/Login.jsx";
 import Logout from "./pages/users/Logout.jsx";
@@ -54,6 +55,14 @@ function App() {
             element={
               <PrivateRoute>
                 <MyTrips />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <PrivateRoute>
+                <Orders />
               </PrivateRoute>
             }
           />

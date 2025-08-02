@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const parcelSchema = new mongoose.Schema(
   {
+    // This new field will store the ID of the user who created the parcel.
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // This tells Mongoose to link to the 'User' model
+      required: true,
+    },
     senderName: {
       type: String,
       required: [true, "Sender name is required."],
@@ -26,10 +32,12 @@ const parcelSchema = new mongoose.Schema(
     weight: {
       type: Number,
       required: [true, "Package weight is required."],
+      min: [0, "Weight cannot be negative."],
     },
     fare: {
       type: Number,
       required: [true, "Fare is required."],
+      min: [0, "Fare cannot be negative."],
     },
     status: {
       type: String,
@@ -39,8 +47,6 @@ const parcelSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    // --- THE FIX ---
-    // Explicitly tell Mongoose to use the 'parcel' collection (singular)
     collection: "parcel",
   }
 );

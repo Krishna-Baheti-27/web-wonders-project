@@ -2,19 +2,20 @@ import express from "express";
 import {
   calculateFare,
   createBooking,
+  getUserOrders,
 } from "../controllers/parcelController.js";
 // import { protect } from '../middlewares/userMiddleware.js'; // Optional: Protect routes
 
 const router = express.Router();
 
-// @desc    Calculate parcel fare
-// @route   POST /api/parcels/fare
-// @access  Public (or Private if you add middleware)
+// Calculate parcel fare
 router.post("/fare", calculateFare);
 
-// @desc    Create a new parcel booking
-// @route   POST /api/parcels/book
-// @access  Public (or Private if you add middleware)
+// Create a new parcel booking
 router.post("/book", createBooking);
+
+// NEW: Get all orders for a specific user
+// The ':userId' is a URL parameter that will contain the user's ID
+router.get("/user/:userId", getUserOrders);
 
 export default router;
