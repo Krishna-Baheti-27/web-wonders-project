@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 // Note: Navbar and Footer are removed as they are now in App.jsx
 
 const ALERTS_API_URL = "http://localhost:4000/api/alerts";
@@ -45,7 +46,6 @@ const AlertForm = ({ onAlertSaved, editingAlert, setEditingAlert }) => {
 
   return (
     <div className="bg-white p-8 rounded-xl shadow-lg mb-12">
-      
       <h3 className="text-2xl font-bold text-gray-800 mb-6">
         {editingAlert ? "Edit Alert" : "Create New Alert"}
       </h3>
@@ -302,112 +302,118 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <main className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-extrabold text-gray-800 mb-10">
-          Admin Dashboard
-        </h1>
+    <>
+      <Navbar />
+      <div className="bg-gray-50 min-h-screen">
+        <main className="container mx-auto px-4 py-12">
+          <h1 className="text-4xl font-extrabold text-gray-800 mb-10">
+            Admin Dashboard
+          </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Column 1: Trips Management */}
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">
-              Manage Trips
-            </h2>
-            <TripForm
-              onTripSaved={fetchAllData}
-              editingTrip={editingTrip}
-              setEditingTrip={setEditingTrip}
-            />
-            <div className="space-y-4">
-              {trips.map((trip) => (
-                <div
-                  key={trip._id}
-                  className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between"
-                >
-                  <div>
-                    <p className="font-bold text-lg">{trip.name}</p>
-                    <p className="text-gray-600 text-sm">{trip.description}</p>
-                  </div>
-                  <div className="flex gap-2 flex-shrink-0">
-                    <button
-                      onClick={() => setEditingTrip(trip)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteTrip(trip._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 2: Alerts Management */}
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">
-              Manage Service Alerts
-            </h2>
-            <AlertForm
-              onAlertSaved={fetchAllData}
-              editingAlert={editingAlert}
-              setEditingAlert={setEditingAlert}
-            />
-            <div className="space-y-4">
-              {alerts.map((alert) => (
-                <div
-                  key={alert._id}
-                  className={`bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row items-start md:items-center justify-between border-l-4 ${getPriorityColor(
-                    alert.priority
-                  )}`}
-                >
-                  <div className="flex-1 mb-4 md:mb-0">
-                    <p className="font-bold text-lg">
-                      {alert.title}{" "}
-                      <span
-                        className={`text-sm font-semibold ml-2 px-2 py-0.5 rounded-full ${
-                          alert.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Column 1: Trips Management */}
+            <div>
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                Manage Trips
+              </h2>
+              <TripForm
+                onTripSaved={fetchAllData}
+                editingTrip={editingTrip}
+                setEditingTrip={setEditingTrip}
+              />
+              <div className="space-y-4">
+                {trips.map((trip) => (
+                  <div
+                    key={trip._id}
+                    className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between"
+                  >
+                    <div>
+                      <p className="font-bold text-lg">{trip.name}</p>
+                      <p className="text-gray-600 text-sm">
+                        {trip.description}
+                      </p>
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <button
+                        onClick={() => setEditingTrip(trip)}
+                        className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
                       >
-                        {alert.status}
-                      </span>
-                    </p>
-                    <p className="text-gray-600">{alert.message}</p>
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteTrip(trip._id)}
+                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2 flex-shrink-0">
-                    <button
-                      onClick={() => handleToggleAlertStatus(alert)}
-                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg text-sm"
-                    >
-                      Toggle Status
-                    </button>
-                    <button
-                      onClick={() => setEditingAlert(alert)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteAlert(alert._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
-                    >
-                      Delete
-                    </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Column 2: Alerts Management */}
+            <div>
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                Manage Service Alerts
+              </h2>
+              <AlertForm
+                onAlertSaved={fetchAllData}
+                editingAlert={editingAlert}
+                setEditingAlert={setEditingAlert}
+              />
+              <div className="space-y-4">
+                {alerts.map((alert) => (
+                  <div
+                    key={alert._id}
+                    className={`bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row items-start md:items-center justify-between border-l-4 ${getPriorityColor(
+                      alert.priority
+                    )}`}
+                  >
+                    <div className="flex-1 mb-4 md:mb-0">
+                      <p className="font-bold text-lg">
+                        {alert.title}{" "}
+                        <span
+                          className={`text-sm font-semibold ml-2 px-2 py-0.5 rounded-full ${
+                            alert.status === "active"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {alert.status}
+                        </span>
+                      </p>
+                      <p className="text-gray-600">{alert.message}</p>
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <button
+                        onClick={() => handleToggleAlertStatus(alert)}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg text-sm"
+                      >
+                        Toggle Status
+                      </button>
+                      <button
+                        onClick={() => setEditingAlert(alert)}
+                        className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteAlert(alert._id)}
+                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 };
 
