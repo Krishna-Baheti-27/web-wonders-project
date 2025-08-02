@@ -151,6 +151,7 @@ const Schedules = () => {
 
   return (
     <>
+
   <Navbar />
   <div className="bg-gradient-to-b from-white to-slate-100 min-h-screen">
     <main className="max-w-6xl mx-auto px-4 py-12">
@@ -158,6 +159,7 @@ const Schedules = () => {
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">Route Schedules</h1>
         <p className="text-lg text-gray-500">Browse all available routes and view their stops and timetables.</p>
       </div>
+
 
       {loading && (
         <p className="text-center text-gray-500 text-lg">Loading schedules...</p>
@@ -264,6 +266,7 @@ const Schedules = () => {
                 </div>
               </div>
             </div>
+
           ))}
         </div>
       )}
@@ -271,6 +274,7 @@ const Schedules = () => {
   </div>
   <Footer />
 </>
+
 
   );
 };

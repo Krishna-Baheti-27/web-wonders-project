@@ -10,11 +10,17 @@ import Signup from "./pages/users/Signup.jsx";
 import Login from "./pages/users/Login.jsx";
 import Logout from "./pages/users/Logout.jsx";
 import { PrivateRoute, NotPrivateRoute } from "./components/PrivateRoute.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 import Context from "./context/Context.jsx";
 import AOS from "aos";
 import { useEffect } from "react";
 import Schedules from "./pages/Schedules.jsx";
 import CarpoolPage from "./pages/CarpoolPage.jsx";
+
+// --- Step 1: Import Navbar and AlertBanner here ---
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer.jsx";
+import AlertBanner from "./components/AlertBanner";
 
 function App() {
   useEffect(() => {
@@ -27,97 +33,108 @@ function App() {
   return (
     <div className="min-h-screen bg-lightgray">
       <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Context>
-                <Home />
-              </Context>
-            }
-          />
-          <Route
-            path="/live-map"
-            element={
-              <PrivateRoute>
-                <LiveMap />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/schedules"
-            element={
-              <PrivateRoute>
-                <Schedules />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/carpool"
-            element={
-              <PrivateRoute>
-                <CarpoolPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <PrivateRoute>
-                <Contact />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/my-trips"
-            element={
-              <PrivateRoute>
-                <MyTrips />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/orders"
-            element={
-              <PrivateRoute>
-                <Orders />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/parcel"
-            element={
-              <PrivateRoute>
-                <Parcel />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/user-logout"
-            element={
-              <PrivateRoute>
-                <Logout />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/user-login"
-            element={
-              <NotPrivateRoute>
-                <Login />
-              </NotPrivateRoute>
-            }
-          />
-          <Route
-            path="/user-signup"
-            element={
-              <NotPrivateRoute>
-                <Signup />
-              </NotPrivateRoute>
-            }
-          />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
-        </Routes>
+        {/* Step 2: Wrap your entire application with the Context provider */}
+        <Context>
+          {/* Step 3: Place Navbar and AlertBanner here, outside of Routes */}
+          {/* This makes them appear on every page */}
+          <Navbar />
+          <AlertBanner />
+
+          <Routes>
+            {/* Step 4: Your routes no longer need to be wrapped in Context individually */}
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/live-map"
+              element={
+                <PrivateRoute>
+                  <LiveMap />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/schedules"
+              element={
+                <PrivateRoute>
+                  <Schedules />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/carpool"
+              element={
+                <PrivateRoute>
+                  <CarpoolPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <PrivateRoute>
+                  <Contact />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/my-trips"
+              element={
+                <PrivateRoute>
+                  <MyTrips />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <PrivateRoute>
+                  <Orders />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/parcel"
+              element={
+                <PrivateRoute>
+                  <Parcel />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/user-logout"
+              element={
+                <PrivateRoute>
+                  <Logout />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/user-login"
+              element={
+                <NotPrivateRoute>
+                  <Login />
+                </NotPrivateRoute>
+              }
+            />
+            <Route
+              path="/user-signup"
+              element={
+                <NotPrivateRoute>
+                  <Signup />
+                </NotPrivateRoute>
+              }
+            />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
+          </Routes>
+          <Footer />
+        </Context>
       </BrowserRouter>
     </div>
   );

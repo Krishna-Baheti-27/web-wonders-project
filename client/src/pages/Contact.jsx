@@ -1,49 +1,60 @@
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Send, User, MessageSquare } from 'lucide-react';
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Send,
+  User,
+  MessageSquare,
+} from "lucide-react";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! We will get back to you soon.');
+    console.log("Form submitted:", formData);
+    alert("Thank you for your message! We will get back to you soon.");
     setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: "",
     });
   };
 
   return (
-    
     <div className="min-h-screen bg-gray-50">
-        <Navbar/>
       {/* Header Section */}
       <div className="bg-gradient-to-br text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h1 className="text-4xl text-royalblue md:text-5xl font-bold mb-6">Contact Us</h1>
+          <h1 className="text-4xl text-royalblue md:text-5xl font-bold mb-6">
+            Contact Us
+          </h1>
           <p className="text-xl text-black max-w-3xl mx-auto leading-relaxed">
-            Get in touch with our professional transportation team. We're here to help with your logistics needs, 
-            answer questions about our services, or provide a custom quote for your business.
+            Get in touch with our professional transportation team. We're here
+            to help with your logistics needs, answer questions about our
+            services, or provide a custom quote for your business.
           </p>
         </div>
       </div>
@@ -57,11 +68,14 @@ const ContactPage = () => {
               <MessageSquare className="mr-3 text-blue-600" />
               Send us a Message
             </h2>
-            
+
             <div className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     Full Name *
                   </label>
                   <div className="relative">
@@ -78,9 +92,12 @@ const ContactPage = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     Email Address *
                   </label>
                   <div className="relative">
@@ -101,7 +118,10 @@ const ContactPage = () => {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     Phone Number
                   </label>
                   <div className="relative">
@@ -117,9 +137,12 @@ const ContactPage = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label
+                    htmlFor="subject"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
                     Subject *
                   </label>
                   <select
@@ -141,7 +164,10 @@ const ContactPage = () => {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
                   Message *
                 </label>
                 <textarea
@@ -169,8 +195,10 @@ const ContactPage = () => {
           {/* Contact Information */}
           <div className="space-y-8">
             <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h2>
-              
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Get in Touch
+              </h2>
+
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="bg-blue-100 p-3 rounded-lg">
@@ -190,7 +218,9 @@ const ContactPage = () => {
                   <div>
                     <h3 className="font-semibold text-gray-800 mb-1">Email</h3>
                     <p className="text-gray-600">info@swifttransport.com</p>
-                    <p className="text-sm text-gray-500">We'll respond within 24 hours</p>
+                    <p className="text-sm text-gray-500">
+                      We'll respond within 24 hours
+                    </p>
                   </div>
                 </div>
 
@@ -199,10 +229,14 @@ const ContactPage = () => {
                     <MapPin className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">Office Address</h3>
+                    <h3 className="font-semibold text-gray-800 mb-1">
+                      Office Address
+                    </h3>
                     <p className="text-gray-600">
-                      1234 Transportation Ave<br />
-                      Suite 567<br />
+                      1234 Transportation Ave
+                      <br />
+                      Suite 567
+                      <br />
                       Business City, BC 12345
                     </p>
                   </div>
@@ -212,7 +246,9 @@ const ContactPage = () => {
 
             {/* Business Hours */}
             <div className="bg-white rounded-xl shadow-lg p-8">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Business Hours</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                Business Hours
+              </h3>
               <div className="space-y-2 text-gray-600">
                 <div className="flex justify-between">
                   <span>Monday - Friday</span>
@@ -233,49 +269,57 @@ const ContactPage = () => {
 
         {/* Map Section */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Find Our Location</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Find Our Location
+          </h2>
           <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
             <div className="text-center">
               <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600 mb-2">Interactive Map</p>
               <p className="text-sm text-gray-500">
-                1234 Transportation Ave, Suite 567<br />
+                1234 Transportation Ave, Suite 567
+                <br />
                 Business City, BC 12345
               </p>
             </div>
           </div>
           <p className="text-sm text-gray-500 mt-4 text-center">
-            * In a real implementation, you would embed Google Maps or another mapping service here
+            * In a real implementation, you would embed Google Maps or another
+            mapping service here
           </p>
         </div>
 
         {/* Social Media Links */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Connect With Us</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Connect With Us
+          </h2>
           <div className="flex justify-center space-x-6">
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-200"
               aria-label="Facebook"
             >
               <Facebook className="h-6 w-6" />
             </a>
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="bg-blue-400 hover:bg-blue-500 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-200"
               aria-label="Twitter"
             >
               <Twitter className="h-6 w-6" />
             </a>
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="bg-blue-700 hover:bg-blue-800 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-200"
               aria-label="LinkedIn"
             >
               <Linkedin className="h-6 w-6" />
             </a>
           </div>
-          <p className="text-gray-600 mt-4">Follow us for updates and transportation industry insights</p>
+          <p className="text-gray-600 mt-4">
+            Follow us for updates and transportation industry insights
+          </p>
         </div>
       </div>
     </div>

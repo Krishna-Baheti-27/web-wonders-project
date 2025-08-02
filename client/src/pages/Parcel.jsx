@@ -222,7 +222,6 @@ const Parcel = () => {
 
   return (
     <>
-      <Navbar />
       <main className="bg-gray-100 font-sans flex items-center justify-center py-12 px-4 min-h-[calc(100vh-128px)]">
         {isBooked ? (
           <div className="bg-white p-8 md:p-12 rounded-2xl shadow-2xl text-center max-w-md mx-auto">
@@ -376,7 +375,6 @@ const Parcel = () => {
           </div>
         )}
       </main>
-      <Footer />
     </>
   );
 };
