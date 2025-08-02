@@ -151,7 +151,6 @@ const Schedules = () => {
 
   return (
     <>
-      <Navbar />
       <div className="bg-gray-50 min-h-screen">
         <main className="container mx-auto px-4 py-12">
           <h1 className="text-4xl font-extrabold text-gray-800 mb-8">
@@ -263,7 +262,6 @@ const Schedules = () => {
           )}
         </main>
       </div>
-      <Footer />
     </>
   );
 };

@@ -92,8 +92,6 @@ const LogisticsWebsite = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       {/* Hero Section - Exact match with isometric illustration */}
       <section className="bg-gray-100 py-20">
         <div className="max-w-7xl mx-auto px-6">
@@ -116,9 +114,10 @@ const LogisticsWebsite = () => {
                     Live Map
                   </Link>
                 ) : (
-                  <Link 
+                  <Link
                     to="/"
-                    className="bg-royalblue text-white px-4 py-2 rounded hover:bg-cyan transition font-medium">
+                    className="bg-royalblue text-white px-4 py-2 rounded hover:bg-cyan transition font-medium"
+                  >
                     Get Started
                   </Link>
                 )}
@@ -467,8 +466,6 @@ const LogisticsWebsite = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

@@ -16,11 +16,13 @@ import userRouter from "./routes/userRoutes.js";
 import parcelRouter from "./routes/parcelRoutes.js";
 import routeRouter from "./routes/routeRoutes.js";
 import rideRouter from "./routes/rideRoutes.js";
+import alertRouter from "./routes/alertRoutes.js";
 
 app.use("/api/admin", adminRouter);
 app.use("/api/users", userRouter);
 app.use("/api/parcels", parcelRouter);
 app.use("/api/routes", routeRouter);
 app.use("/api/rides", rideRouter);
+app.use("/api/alerts", alertRouter);
 
 export default app;
