@@ -1,11 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom"; // Use NavLink for active styling
 import { DataContext } from "../context/Context.jsx";
 
 const Navbar = () => {
   const data = useContext(DataContext);
-  let isAuthenticated = false;
-  if (data.user?._id) isAuthenticated = true;
+  const [isAuthenticated, setisAuthenticated] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(null);
+  useEffect(() => {
+  if (data.user?._id) {
+    setisAuthenticated(true);
+    setIsAdmin(data.user?.is_admin);
+  }
+  }, [])
+  
+
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -67,8 +75,9 @@ const Navbar = () => {
           <NavItem to="/carpool">Carpool</NavItem>
           <NavItem to="/my-trips">Trips</NavItem>
           <NavItem to="/orders">My Orders</NavItem>
-          <NavItem to="/admin/dashboard">Admin</NavItem>
+          { isAdmin ? <NavItem to="/admin/dashboard">Admin</NavItem> : null }
           <NavItem to="/parcel">Send a Parcel</NavItem>
+          <NavItem to="/contact">Contact</NavItem>
         </div>
 
         {/* Desktop Auth Button */}

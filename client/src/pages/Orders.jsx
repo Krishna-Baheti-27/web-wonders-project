@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { DataContext } from "../context/Context.jsx";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar.jsx";
+import Footer from "../components/Footer.jsx";
 
 // --- Helper Icons ---
 const CalendarIcon = () => (
@@ -205,41 +207,45 @@ const Orders = () => {
   }, [user]);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <main className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-extrabold text-gray-800 mb-8 border-b-4 border-blue-500 pb-2 inline-block">
-          My Orders
-        </h1>
+    <>
+      <Navbar />
+      <div className="bg-gray-50 min-h-screen">
+        <main className="container mx-auto px-4 py-12">
+          <h1 className="text-4xl font-extrabold text-gray-800 mb-8 border-b-4 border-blue-500 pb-2 inline-block">
+            My Orders
+          </h1>
 
-        {error && <p className="text-center text-red-500">{error}</p>}
+          {error && <p className="text-center text-red-500">{error}</p>}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loading ? (
-            // Show 3 skeleton cards while loading
-            [...Array(3)].map((_, i) => <SkeletonCard key={i} />)
-          ) : !error && orders.length > 0 ? (
-            orders.map((order) => <OrderCard key={order._id} order={order} />)
-          ) : (
-            // This will only show if not loading, no errors, and no orders
-            <div className="md:col-span-2 lg:col-span-3 text-center py-16 px-6 bg-white rounded-lg shadow-md">
-              <NoOrdersIcon />
-              <h2 className="text-2xl font-semibold text-gray-700 mt-4">
-                No Orders Found
-              </h2>
-              <p className="text-gray-500 mt-2">
-                You haven't sent any parcels yet. Let's change that!
-              </p>
-              <Link
-                to="/parcel"
-                className="mt-6 inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
-              >
-                Send Your First Parcel
-              </Link>
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {loading ? (
+              // Show 3 skeleton cards while loading
+              [...Array(3)].map((_, i) => <SkeletonCard key={i} />)
+            ) : !error && orders.length > 0 ? (
+              orders.map((order) => <OrderCard key={order._id} order={order} />)
+            ) : (
+              // This will only show if not loading, no errors, and no orders
+              <div className="md:col-span-2 lg:col-span-3 text-center py-16 px-6 bg-white rounded-lg shadow-md">
+                <NoOrdersIcon />
+                <h2 className="text-2xl font-semibold text-gray-700 mt-4">
+                  No Orders Found
+                </h2>
+                <p className="text-gray-500 mt-2">
+                  You haven't sent any parcels yet. Let's change that!
+                </p>
+                <Link
+                  to="/parcel"
+                  className="mt-6 inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                >
+                  Send Your First Parcel
+                </Link>
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+      <Footer />
+    </>
   );
 };
 

@@ -16,6 +16,7 @@ import AOS from "aos";
 import { useEffect } from "react";
 import Schedules from "./pages/Schedules.jsx";
 import CarpoolPage from "./pages/CarpoolPage.jsx";
+import { AdminRoute } from "./components/AdminRoute.jsx";
 
 // --- Step 1: Import Navbar and AlertBanner here ---
 import Navbar from "./components/Navbar";
@@ -56,7 +57,9 @@ function App() {
               path="/admin/dashboard"
               element={
                 <PrivateRoute>
+                  <AdminRoute>
                   <AdminDashboard />
+                  </AdminRoute>
                 </PrivateRoute>
               }
             />

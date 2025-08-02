@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // assuming route is /trips/:id
 import axios from "axios";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
 const TripViewPage = () => {
 const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
@@ -29,6 +31,8 @@ const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
   if (!trip) return <div className="text-center mt-10 text-red-500">Trip not found.</div>;
 
   return (
+    <>
+    <Navbar />
     <div className="max-w-4xl mx-auto p-6">
       <img
         src={trip.image}
@@ -54,6 +58,8 @@ const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
         ))}
       </ul>
     </div>
+    <Footer />
+    </>
   );
 };
 

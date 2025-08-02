@@ -26,6 +26,10 @@ const userSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  is_admin: {
+    type: Boolean,
+    default: false // Optional: set default to false
   }
 });
 
