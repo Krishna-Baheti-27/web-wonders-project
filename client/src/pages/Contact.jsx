@@ -12,6 +12,8 @@ import {
   MessageSquare,
 } from "lucide-react";
 import Footer from "../components/Footer";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -46,7 +48,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar/>
+      <Navbar />
       {/* Header Section */}
       <div className="bg-gradient-to-br text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
@@ -275,20 +277,32 @@ const ContactPage = () => {
             Find Our Location
           </h2>
           <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 mb-2">Interactive Map</p>
-              <p className="text-sm text-gray-500">
-                1234 Transportation Ave, Suite 567
-                <br />
-                Business City, BC 12345
-              </p>
-            </div>
+            <MapContainer
+              center={[21.1645, 72.785]} // Example: Surat, India
+              zoom={13}
+              scrollWheelZoom={true}
+              className="w-full h-full z-0"
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              />
+
+              <Marker
+                            key="1"
+                            position={[21.1645, 72.785]}
+                            icon={L.icon({
+                              iconUrl: "/images/location-pin.png",
+                              iconSize: [40, 40],
+                              iconAnchor: [12, 41],
+                            })}
+                          >
+                            <Popup offset={[7, -25]} data-aos="fade-up">
+                              <strong>Sardar Valllabhbhai National Institute of lechnollogy, Surat</strong>
+                            </Popup>
+                          </Marker>
+            </MapContainer>
           </div>
-          <p className="text-sm text-gray-500 mt-4 text-center">
-            * In a real implementation, you would embed Google Maps or another
-            mapping service here
-          </p>
         </div>
 
         {/* Social Media Links */}
@@ -324,7 +338,7 @@ const ContactPage = () => {
           </p>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

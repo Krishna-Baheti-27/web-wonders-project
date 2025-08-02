@@ -1,32 +1,22 @@
 import React, { useState, useEffect } from "react";
 import {
   Navigation,
-  MapPin,
-  Car,
-  Bike,
-  Bus,
-  User,
-  Search,
   Route,
-  Clock,
-  Ruler,
-  Star,
-  Settings,
   Menu,
   X,
-  Heart,
-  Zap,
-  AlertTriangle,
-  Layers,
-  Plus,
-  Minus,
-  RotateCcw,
-  Share,
 } from "lucide-react";
 import Navbar from "../components/Navbar";
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import Footer from "../components/Footer";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import axios from "axios";
 
 const InteractiveMapWebsite = () => {
   useEffect(() => {
@@ -40,10 +30,20 @@ const InteractiveMapWebsite = () => {
   const [matchedRoute, setMatchedRoute] = useState(null);
 
   useEffect(() => {
-    fetch("/data/routes.json")
-      .then((res) => res.json())
-      .then(setRoutes);
+    const fetchRoutes = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/routes");
+        setRoutes(response.data);
+      } catch (err) {
+        setError("Failed to fetch route schedules. Please try again later.");
+        console.error(err);
+      } finally {
+      }
+    };
+    fetchRoutes();
   }, []);
+
+
   const handleSearch = () => {
     const lowerFrom = from.toLowerCase();
     const lowerTo = to.toLowerCase();
@@ -85,7 +85,6 @@ const InteractiveMapWebsite = () => {
             </div>
 
             <div className="flex-1 overflow-y-auto">
-
               {/* Route Input */}
               <div className="p-4 space-y-4 border-b">
                 <h2 className="text-lg font-semibold text-gray-800">
@@ -99,7 +98,7 @@ const InteractiveMapWebsite = () => {
                       type="text"
                       placeholder="From"
                       value={from}
-            onChange={(e) => setFrom(e.target.value)}
+                      onChange={(e) => setFrom(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
@@ -110,12 +109,11 @@ const InteractiveMapWebsite = () => {
                       type="text"
                       placeholder="To"
                       value={to}
-            onChange={(e) => setTo(e.target.value)}
+                      onChange={(e) => setTo(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
-
 
                 <button
                   onClick={handleSearch}
@@ -177,9 +175,6 @@ const InteractiveMapWebsite = () => {
                   </div>
                 </div>
               )} */}
-
-              
-        
             </div>
           </div>
         </div>
@@ -248,57 +243,55 @@ const InteractiveMapWebsite = () => {
           {/* Simulated Map Display */}
           {/* Real Map Display */}
           <div className="h-full">
-        <MapContainer
-          center={defaultCenter}
-          zoom={15}
-          style={{ height: "100%", width: "100%", zIndex: 0 }}
-          data-aos="fade-up"
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            data-aos="fade-up"
-          />
-
-          {(matchedRoute ? [matchedRoute] : []).map((route) => (
-            <Polyline
-              key={route.id}
-              positions={route.stops.map((s) => [s.lat, s.lng])}
-              color={route.color}
-              data-aos="fade-up"
-            />
-          ))}
-
-          {(matchedRoute
-            ? matchedRoute.stops
-            : []
-          ).map((stop, i) => (
-            <Marker
-              key={i}
-              position={[stop.lat, stop.lng]}
-              icon={L.icon({
-                iconUrl: "/images/location-pin.png",
-                iconSize: [40, 40],
-                iconAnchor: [12, 41],
-              })}
-             eventHandlers={{
-                click: (e) => {
-                  const map = e.target._map;
-                  if (map) {
-                    map.flyTo([stop.lat, stop.lng], 17, { duration:1 });
-                  }},
-                }}
-              
+            <MapContainer
+              center={defaultCenter}
+              zoom={15}
+              style={{ height: "100%", width: "100%", zIndex: 0 }}
               data-aos="fade-up"
             >
-              <Popup offset={[7, -25]} data-aos="fade-up">
-                <strong>{stop.name}</strong>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                data-aos="fade-up"
+              />
+
+              {(matchedRoute ? [matchedRoute] : []).map((route) => (
+                <Polyline
+                  key={route.id}
+                  positions={route.stops.map((s) => [s.lat, s.lng])}
+                  color={route.color}
+                  data-aos="fade-up"
+                />
+              ))}
+
+              {(matchedRoute ? matchedRoute.stops : []).map((stop, i) => (
+                <Marker
+                  key={i}
+                  position={[stop.lat, stop.lng]}
+                  icon={L.icon({
+                    iconUrl: "/images/location-pin.png",
+                    iconSize: [40, 40],
+                    iconAnchor: [12, 41],
+                  })}
+                  eventHandlers={{
+                    click: (e) => {
+                      const map = e.target._map;
+                      if (map) {
+                        map.flyTo([stop.lat, stop.lng], 17, { duration: 1 });
+                      }
+                    },
+                  }}
+                  data-aos="fade-up"
+                >
+                  <Popup offset={[7, -25]} data-aos="fade-up">
+                    <strong>{stop.name}</strong>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
