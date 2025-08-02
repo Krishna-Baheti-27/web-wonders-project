@@ -77,7 +77,7 @@ export const calculateFare = async (req, res) => {
 export const createBooking = async (req, res) => {
   try {
     const {
-      userId,
+      user,
       senderName,
       senderPhone,
       source,
@@ -87,7 +87,7 @@ export const createBooking = async (req, res) => {
       fare,
     } = req.body;
     if (
-      !userId ||
+      !user ||
       !senderName ||
       !senderPhone ||
       !source ||
@@ -103,11 +103,10 @@ export const createBooking = async (req, res) => {
 
     console.log(
       "--- DEBUG (createBooking): Received userId from body:",
-      userId
+      user._id
     );
-
     const newParcel = new Parcel({
-      user: userId,
+      user: user._id,
       senderName,
       senderPhone,
       source,
@@ -122,7 +121,6 @@ export const createBooking = async (req, res) => {
       "--- DEBUG (createBooking): 'user' field on newParcel instance before save:",
       newParcel.user
     );
-
     const savedParcel = await newParcel.save();
     console.log("Parcel saved successfully:", savedParcel);
     res

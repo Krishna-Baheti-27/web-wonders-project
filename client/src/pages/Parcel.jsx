@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext } from "react"; // Import useContext
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { DataContext } from "../context/Context.jsx"; // Import your DataContext
+import { handlePayment } from "../utils/razorpay";
+import { DataContext } from "../context/Context";
 
 // --- Icon Components (Stable Definition) ---
 const LocationPinIcon = () => (
@@ -98,6 +99,7 @@ const PhoneIcon = () => (
   </svg>
 );
 
+// --- TYPING FIX: InputField is now defined OUTSIDE the Parcel component ---
 const InputField = ({
   icon,
   id,
@@ -121,12 +123,10 @@ const InputField = ({
   </div>
 );
 
+// Define API URL - Corrected to port 4000
 const API_URL = "http://localhost:4000/api/parcels";
 
 const Parcel = () => {
-  // --- THE FIX: Get user data from context ---
-  const { user } = useContext(DataContext);
-
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
   const [packageType, setPackageType] = useState("document");
@@ -137,6 +137,8 @@ const Parcel = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isBooked, setIsBooked] = useState(false);
   const [error, setError] = useState("");
+
+  const { user } = useContext(DataContext);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -170,30 +172,20 @@ const Parcel = () => {
 
   const handleRequestBooking = async (e) => {
     e.preventDefault();
-    // --- THE FIX: Check if user is logged in ---
-    if (!user?._id) {
-      setError("You must be logged in to book a parcel.");
-      return;
-    }
-
     setIsLoading(true);
     setError("");
     try {
-      // --- THE FIX: Add the userId to the request body ---
       const bookingDetails = {
-        userId: user._id,
+        user,
         source,
         destination,
         packageType,
         weight,
         senderName,
         senderPhone,
-        fare,
+        fare
       };
-      const res = await axios.post(`${API_URL}/book`, bookingDetails);
-      if (res.status === 201) {
-        setIsBooked(true);
-      }
+      handlePayment(setIsBooked, user, bookingDetails);
     } catch (err) {
       setError(
         err.response?.data?.message || "Booking failed. Please try again."
@@ -222,7 +214,7 @@ const Parcel = () => {
 
   return (
     <>
-    <Navbar/>
+      <Navbar />
       <main className="bg-gray-100 font-sans flex items-center justify-center py-12 px-4 min-h-[calc(100vh-128px)]">
         {isBooked ? (
           <div className="bg-white p-8 md:p-12 rounded-2xl shadow-2xl text-center max-w-md mx-auto">
@@ -376,7 +368,7 @@ const Parcel = () => {
           </div>
         )}
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 };
