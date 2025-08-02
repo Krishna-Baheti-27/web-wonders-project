@@ -37,7 +37,7 @@ function App() {
         <Context>
           {/* Step 3: Place Navbar and AlertBanner here, outside of Routes */}
           {/* This makes them appear on every page */}
-          <Navbar />
+
           <AlertBanner />
 
           <Routes>
@@ -133,7 +133,6 @@ function App() {
             />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>
-          <Footer />
         </Context>
       </BrowserRouter>
     </div>
