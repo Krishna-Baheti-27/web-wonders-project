@@ -2,13 +2,27 @@ import Ride from "../models/ride.js";
 import mongoose from "mongoose";
 
 // @desc    Create a new ride offer
-// @route   POST /api/rides
-// @access  Private
 export const createRide = async (req, res) => {
   try {
-    const { driver, from, to, departureTime, seatsAvailable, notes } = req.body;
+    // Add driverPhone to the destructured request body
+    const {
+      driver,
+      driverPhone,
+      from,
+      to,
+      departureTime,
+      seatsAvailable,
+      notes,
+    } = req.body;
 
-    if (!driver || !from || !to || !departureTime || !seatsAvailable) {
+    if (
+      !driver ||
+      !driverPhone ||
+      !from ||
+      !to ||
+      !departureTime ||
+      !seatsAvailable
+    ) {
       return res
         .status(400)
         .json({ message: "Please provide all required fields." });
@@ -16,6 +30,7 @@ export const createRide = async (req, res) => {
 
     const newRide = new Ride({
       driver,
+      driverPhone, // Save the phone number
       from,
       to,
       departureTime,
@@ -35,15 +50,14 @@ export const createRide = async (req, res) => {
   }
 };
 
-// @desc    Get all active ride offers
-// @route   GET /api/rides
-// @access  Public
+// @desc    Get all active ride offers for the public list
 export const getActiveRides = async (req, res) => {
   try {
     const activeRides = await Ride.find({
       status: "active",
       departureTime: { $gt: new Date() },
     })
+      // IMPORTANT: We specifically DO NOT send the driver's phone number to the public
       .populate("driver", "name")
       .sort({ departureTime: 1 });
     res.status(200).json(activeRides);
@@ -55,50 +69,32 @@ export const getActiveRides = async (req, res) => {
   }
 };
 
-// @desc    Cancel/Delete a ride offer
-// @route   DELETE /api/rides/:rideId
-// @access  Private
-export const cancelRide = async (req, res) => {
+// @desc    Get rides that a specific user has accepted
+export const getMyAcceptedRides = async (req, res) => {
   try {
-    const { rideId } = req.params;
-    const { userId } = req.body;
+    const { userId } = req.params;
+    const acceptedRides = await Ride.find({
+      acceptedBy: userId,
+      status: "booked",
+    })
+      .populate("driver", "name") // We still want the driver's name
+      .sort({ departureTime: -1 });
 
-    if (!mongoose.Types.ObjectId.isValid(rideId)) {
-      return res.status(400).json({ message: "Invalid Ride ID." });
-    }
-
-    const ride = await Ride.findById(rideId);
-
-    if (!ride) {
-      return res.status(404).json({ message: "Ride not found." });
-    }
-
-    if (ride.driver.toString() !== userId) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to delete this ride." });
-    }
-
-    await Ride.findByIdAndDelete(rideId);
-
-    res.status(200).json({ message: "Ride offer deleted successfully." });
+    // Since the user has accepted, we can now securely send the driver's phone number
+    res.status(200).json(acceptedRides);
   } catch (error) {
-    console.error("Error deleting ride:", error);
-    res.status(500).json({ message: "Server error while deleting ride." });
+    console.error("Error fetching accepted rides:", error);
+    res
+      .status(500)
+      .json({ message: "Server error while fetching accepted rides." });
   }
 };
 
-// @desc    Accept a ride offer
-// @route   PATCH /api/rides/:rideId/accept
-// @access  Private
+// @desc    Allow a user to accept a ride
 export const acceptRide = async (req, res) => {
   try {
     const { rideId } = req.params;
     const { userId } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(rideId)) {
-      return res.status(400).json({ message: "Invalid Ride ID." });
-    }
 
     const ride = await Ride.findById(rideId);
 
@@ -125,5 +121,32 @@ export const acceptRide = async (req, res) => {
   } catch (error) {
     console.error("Error accepting ride:", error);
     res.status(500).json({ message: "Server error while accepting ride." });
+  }
+};
+
+// @desc    Allow a driver to cancel/delete their ride offer
+export const cancelRide = async (req, res) => {
+  try {
+    const { rideId } = req.params;
+    const { userId } = req.body;
+
+    const ride = await Ride.findById(rideId);
+
+    if (!ride) {
+      return res.status(404).json({ message: "Ride not found." });
+    }
+
+    if (ride.driver.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this ride." });
+    }
+
+    await Ride.findByIdAndDelete(rideId);
+
+    res.status(200).json({ message: "Ride offer deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting ride:", error);
+    res.status(500).json({ message: "Server error while deleting ride." });
   }
 };

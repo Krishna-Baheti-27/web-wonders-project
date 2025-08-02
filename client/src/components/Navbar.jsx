@@ -1,22 +1,37 @@
-// File: client/src/components/Navbar.jsx
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom"; // Use NavLink for active styling
 import { DataContext } from "../context/Context.jsx";
 
 const Navbar = () => {
   const data = useContext(DataContext);
   let isAuthenticated = false;
-  if (data.user._id) isAuthenticated = true;
+  if (data.user?._id) isAuthenticated = true;
 
   const [isOpen, setIsOpen] = useState(false);
+
+  // Style for the active navigation link
+  const activeLinkStyle = {
+    color: "#2563EB", // This is Tailwind's blue-600
+    borderBottom: "2px solid #2563EB",
+  };
+
+  // A reusable component for NavLinks to keep code DRY
+  const NavItem = ({ to, children }) => (
+    <NavLink
+      to={to}
+      className="text-gray-600 hover:text-blue-600 pb-1 transition-colors duration-300"
+      style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
+      onClick={() => setIsOpen(false)}
+    >
+      {children}
+    </NavLink>
+  );
+
   return (
-    <nav className="bg-lightgray text-darktext px-6 py-4 shadow-sm">
-      <div className="flex items-center justify-between">
+    <nav className="bg-white text-gray-800 px-6 py-4 shadow-md sticky top-0 z-50">
+      <div className="container mx-auto flex items-center justify-between">
         {/* Logo / Site Name */}
-        <Link
-          to="/"
-          className="text-2xl font-bold text-royalblue hover:text-cyan transition"
-        >
+        <Link to="/" className="text-2xl font-bold text-blue-600 transition">
           Apni site
         </Link>
 
@@ -24,20 +39,20 @@ const Navbar = () => {
         <div className="md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex flex-col justify-center items-center w-10 h-10 group hover:scale-110 transition-transform"
+            className="flex flex-col justify-center items-center w-10 h-10 group"
           >
             <div
-              className={`w-6 h-0.5 bg-darktext my-1 transition-all duration-300 ease-in-out ${
+              className={`w-6 h-0.5 bg-gray-800 my-1 transition-all duration-300 ease-in-out ${
                 isOpen ? "rotate-45 translate-y-2" : ""
               }`}
             ></div>
             <div
-              className={`w-6 h-0.5 bg-darktext my-1 transition-all duration-300 ease-in-out ${
+              className={`w-6 h-0.5 bg-gray-800 my-1 transition-all duration-300 ease-in-out ${
                 isOpen ? "opacity-0" : ""
               }`}
             ></div>
             <div
-              className={`w-6 h-0.5 bg-darktext my-1 transition-all duration-300 ease-in-out ${
+              className={`w-6 h-0.5 bg-gray-800 my-1 transition-all duration-300 ease-in-out ${
                 isOpen ? "-rotate-45 -translate-y-2" : ""
               }`}
             ></div>
@@ -45,67 +60,22 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6 items-center text-lg font-sans text-darktext">
-          <Link to="/" className="hover:text-cyan text-gray-700 transition">
-            Home
-          </Link>
-          <Link
-            to="/live-map"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            Live Map
-          </Link>
-          <Link
-            to="/schedules"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Schedules
-          </Link>
-          <Link
-            to="/carpool"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            Car Pooling
-          </Link>
-          <Link
-            to="/my-trips"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            My Trips
-          </Link>
-          {/* --- THIS IS THE NEWLY ADDED LINK FOR DESKTOP --- */}
-          <Link
-            to="/orders"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            My Orders
-          </Link>
-          <Link
-            to="/admin/dashboard"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            Admin
-          </Link>
-          <Link
-            to="/parcel"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            Send a Parcel
-          </Link>
-          <Link
-            to="/contact"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            Contact
-          </Link>
+        <div className="hidden md:flex space-x-8 items-center text-md font-medium">
+          <NavItem to="/">Home</NavItem>
+          <NavItem to="/live-map">Live Map</NavItem>
+          <NavItem to="/schedules">Schedules</NavItem>
+          <NavItem to="/carpool">Carpool</NavItem>
+          <NavItem to="/my-trips">Trips</NavItem>
+          <NavItem to="/orders">My Orders</NavItem>
+          <NavItem to="/admin/dashboard">Admin</NavItem>
+          <NavItem to="/parcel">Send a Parcel</NavItem>
         </div>
 
         {/* Desktop Auth Button */}
-        <div className="hidden md:flex space-x-4">
+        <div className="hidden md:flex">
           <Link
             to={isAuthenticated ? "/user-logout" : "/user-login"}
-            className="bg-royalblue text-white px-4 py-2 rounded hover:bg-cyan transition"
+            className="bg-blue-600 text-white font-bold px-5 py-2 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105"
           >
             {isAuthenticated ? "Logout" : "Get Started"}
           </Link>
@@ -114,75 +84,28 @@ const Navbar = () => {
 
       {/* Mobile Menu with Animation */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out transform ${
-          isOpen
-            ? "max-h-screen opacity-100 scale-100 translate-y-0"
-            : "max-h-0 opacity-0 scale-95 -translate-y-2"
+        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+          isOpen ? "max-h-screen pt-4" : "max-h-0"
         }`}
       >
-        <div className="flex flex-col mt-4 space-y-2 text-lg font-sans text-darktext">
-          <Link
-            to="/"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Home
-          </Link>
-          <Link
-            to="/live-map"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Live Map
-          </Link>
-          <Link
-            to="/schedules"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Schedules
-          </Link>
-          <Link
-            to="/carpool"
-            className="hover:text-cyan text-gray-700 transition"
-          >
-            Car Pooling
-          </Link>
-          <Link
-            to="/my-trips"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            My Trips
-          </Link>
-          <Link
-            to="/orders"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            My Orders
-          </Link>
-          <Link
-            to="/parcel"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Send a Parcel
-          </Link>
-          <Link
-            to="/contact"
-            className="hover:text-cyan text-gray-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Contact
-          </Link>
-          <Link
-            to={isAuthenticated ? "/user-logout" : "/user-login"}
-            className="bg-royalblue text-white px-4 py-2 rounded hover:bg-cyan transition"
-            onClick={() => setIsOpen(false)}
-          >
-            {isAuthenticated ? "Logout" : "Get Started"}
-          </Link>
+        <div className="flex flex-col space-y-4 text-md font-medium">
+          <NavItem to="/">Home</NavItem>
+          <NavItem to="/live-map">Live Map</NavItem>
+          <NavItem to="/schedules">Schedules</NavItem>
+          <NavItem to="/carpool">Carpool</NavItem>
+          <NavItem to="/my-trips">Trips</NavItem>
+          <NavItem to="/orders">My Orders</NavItem>
+          <NavItem to="/admin/dashboard">Admin</NavItem>
+          <NavItem to="/parcel">Send a Parcel</NavItem>
+          <div className="pt-4">
+            <Link
+              to={isAuthenticated ? "/user-logout" : "/user-login"}
+              className="bg-blue-600 text-white block text-center w-full font-bold px-5 py-3 rounded-lg hover:bg-blue-700 transition-all"
+              onClick={() => setIsOpen(false)}
+            >
+              {isAuthenticated ? "Logout" : "Get Started"}
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
