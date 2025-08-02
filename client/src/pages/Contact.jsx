@@ -158,7 +158,7 @@ const ContactPage = () => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg  flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
               >
                 <Send className="h-5 w-5" />
                 <span>Send Message</span>
@@ -255,21 +255,21 @@ const ContactPage = () => {
           <div className="flex justify-center space-x-6">
             <a 
               href="#" 
-              className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+              className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-200"
               aria-label="Facebook"
             >
               <Facebook className="h-6 w-6" />
             </a>
             <a 
               href="#" 
-              className="bg-blue-400 hover:bg-blue-500 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+              className="bg-blue-400 hover:bg-blue-500 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-200"
               aria-label="Twitter"
             >
               <Twitter className="h-6 w-6" />
             </a>
             <a 
               href="#" 
-              className="bg-blue-700 hover:bg-blue-800 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+              className="bg-blue-700 hover:bg-blue-800 text-white p-4 rounded-full transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-200"
               aria-label="LinkedIn"
             >
               <Linkedin className="h-6 w-6" />
