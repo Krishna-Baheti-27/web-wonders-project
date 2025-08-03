@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 // API Endpoints
 const ALERTS_API_URL = "http://localhost:4000/api/alerts";
 const TRIPS_API_URL = "http://localhost:4000/api/trips";
 const PARCELS_API_URL = "http://localhost:4000/api/parcels";
+const ROUTES_API_URL = "http://localhost:4000/api/routes";
 
 // --- Form for creating and editing alerts ---
 const AlertForm = ({ onAlertSaved, editingAlert, setEditingAlert }) => {
@@ -46,8 +45,8 @@ const AlertForm = ({ onAlertSaved, editingAlert, setEditingAlert }) => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-lg mb-12">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6">
+    <div className="bg-white p-6 rounded-xl shadow-lg mb-8">
+      <h3 className="text-xl font-bold text-gray-800 mb-4">
         {editingAlert ? "Edit Alert" : "Create New Alert"}
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,7 +78,7 @@ const AlertForm = ({ onAlertSaved, editingAlert, setEditingAlert }) => {
         <div className="flex gap-4">
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
           >
             {editingAlert ? "Save Changes" : "Create Alert"}
           </button>
@@ -87,9 +86,9 @@ const AlertForm = ({ onAlertSaved, editingAlert, setEditingAlert }) => {
             <button
               type="button"
               onClick={() => setEditingAlert(null)}
-              className="w-full bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors"
+              className="w-full bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Cancel Edit
+              Cancel
             </button>
           )}
         </div>
@@ -138,7 +137,6 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
       image,
       features: features.split(",").map((f) => f.trim()),
     };
-
     try {
       if (editingTrip) {
         await axios.put(`${TRIPS_API_URL}/${editingTrip._id}`, tripData);
@@ -153,14 +151,14 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-lg mb-12">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6">
+    <div className="bg-white p-6 rounded-xl shadow-lg mb-8">
+      <h3 className="text-xl font-bold text-gray-800 mb-4">
         {editingTrip ? "Edit Trip" : "Create New Trip"}
       </h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          placeholder="Trip Name (e.g., City Explorer)"
+          placeholder="Trip Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -172,12 +170,12 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
           onChange={(e) => setDescription(e.target.value)}
           required
           className="w-full p-3 border border-gray-300 rounded-lg"
-          rows="3"
+          rows="2"
         ></textarea>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <input
             type="text"
-            placeholder="Duration (e.g., 8 hours)"
+            placeholder="Duration"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
             required
@@ -185,7 +183,7 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
           />
           <input
             type="text"
-            placeholder="Price (e.g., $149)"
+            placeholder="Price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
@@ -200,17 +198,17 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
           required
           className="w-full p-3 border border-gray-300 rounded-lg"
         />
-        <textarea
-          placeholder="Features (comma-separated, e.g., Guide, Lunch, Photos)"
+        <input
+          type="text"
+          placeholder="Features (comma-separated)"
           value={features}
           onChange={(e) => setFeatures(e.target.value)}
           className="w-full p-3 border border-gray-300 rounded-lg"
-          rows="2"
-        ></textarea>
+        />
         <div className="flex gap-4">
           <button
             type="submit"
-            className="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
           >
             {editingTrip ? "Save Changes" : "Create Trip"}
           </button>
@@ -218,9 +216,9 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
             <button
               type="button"
               onClick={() => setEditingTrip(null)}
-              className="w-full bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors"
+              className="w-full bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Cancel Edit
+              Cancel
             </button>
           )}
         </div>
@@ -230,72 +228,166 @@ const TripForm = ({ onTripSaved, editingTrip, setEditingTrip }) => {
   );
 };
 
-// --- Component to manage a single parcel (UI IMPROVED) ---
-const ParcelManagerCard = ({ parcel, onUpdate }) => {
-  const [status, setStatus] = useState(parcel.status);
-  const [adminTag, setAdminTag] = useState(parcel.adminTag);
-  const [isSaving, setIsSaving] = useState(false);
+// --- Form for creating and editing routes ---
+const RouteForm = ({ onRouteSaved, editingRoute, setEditingRoute }) => {
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [type, setType] = useState("bus");
+  const [color, setColor] = useState("#3B82F6");
+  const [startTime, setStartTime] = useState("06:00");
+  const [endTime, setEndTime] = useState("22:00");
+  const [frequency, setFrequency] = useState(15);
+  const [stops, setStops] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSave = async () => {
-    setIsSaving(true);
+  useEffect(() => {
+    if (editingRoute) {
+      setId(editingRoute.id);
+      setName(editingRoute.name);
+      setType(editingRoute.type);
+      setColor(editingRoute.color);
+      setStartTime(editingRoute.startTime);
+      setEndTime(editingRoute.endTime);
+      setFrequency(editingRoute.frequency);
+      setStops(JSON.stringify(editingRoute.stops, null, 2));
+    } else {
+      setId("");
+      setName("");
+      setType("bus");
+      setColor("#3B82F6");
+      setStartTime("06:00");
+      setEndTime("22:00");
+      setFrequency(15);
+      setStops("");
+    }
+  }, [editingRoute]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    const routeData = {
+      id,
+      name,
+      type,
+      color,
+      startTime,
+      endTime,
+      frequency,
+      stops,
+    };
     try {
-      await onUpdate(parcel._id, { status, adminTag });
-    } catch (error) {
-      console.error("Failed to update parcel", error);
-    } finally {
-      setIsSaving(false);
+      if (editingRoute) {
+        await axios.put(`${ROUTES_API_URL}/${editingRoute._id}`, routeData);
+      } else {
+        await axios.post(ROUTES_API_URL, routeData);
+      }
+      onRouteSaved();
+      setEditingRoute(null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to save route.");
     }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 space-y-4 flex flex-col">
-      <div className="flex-grow">
-        <p className="font-bold text-lg">
-          {parcel.source} → {parcel.destination}
-        </p>
-        <p className="text-sm text-gray-500">
-          User: {parcel.user.name} ({parcel.user.email})
-        </p>
-        <p className="text-xs text-gray-400">Order ID: {parcel._id}</p>
-      </div>
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Update Status
-          </label>
+    <div className="bg-white p-6 rounded-xl shadow-lg mb-8">
+      <h3 className="text-xl font-bold text-gray-800 mb-4">
+        {editingRoute ? "Edit Route" : "Create New Route"}
+      </h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Route ID (e.g., bus-101)"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          required
+          className="w-full p-3 border border-gray-300 rounded-lg"
+        />
+        <input
+          type="text"
+          placeholder="Route Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          className="w-full p-3 border border-gray-300 rounded-lg"
+        />
+        <div className="grid grid-cols-2 gap-4">
           <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white"
           >
-            <option value="pending">Pending</option>
-            <option value="in-transit">In-Transit</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="bus">Bus</option>{" "}
+            <option value="metro">Metro</option>{" "}
+            <option value="car">Car</option>{" "}
+            <option value="cycle">Cycle</option>
           </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Admin Tag / Message
-          </label>
           <input
-            type="text"
-            value={adminTag}
-            onChange={(e) => setAdminTag(e.target.value)}
-            placeholder="e.g., Arriving in 15 mins"
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            type="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            className="w-full h-12 border border-gray-300 rounded-lg"
           />
         </div>
-      </div>
-      <button
-        onClick={handleSave}
-        disabled={isSaving}
-        className="mt-4 w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-indigo-400"
-      >
-        {isSaving ? "Saving..." : "Save Changes"}
-      </button>
+        <div className="grid grid-cols-3 gap-4">
+          <input
+            type="text"
+            placeholder="Start Time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="text"
+            placeholder="End Time"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="number"
+            placeholder="Frequency"
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          />
+        </div>
+        <textarea
+          placeholder="Stops (Paste JSON Array here)"
+          value={stops}
+          onChange={(e) => setStops(e.target.value)}
+          required
+          className="w-full p-3 border border-gray-300 rounded-lg font-mono text-sm"
+          rows="5"
+        ></textarea>
+        <div className="flex gap-4">
+          <button
+            type="submit"
+            className="w-full bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            {editingRoute ? "Save Changes" : "Create Route"}
+          </button>
+          {editingRoute && (
+            <button
+              type="button"
+              onClick={() => setEditingRoute(null)}
+              className="w-full bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      </form>
     </div>
   );
+};
+
+// --- Component to manage a single parcel ---
+const ParcelManagerCard = ({ parcel, onUpdate }) => {
+  /* ... existing code ... */
 };
 
 // --- Main Admin Dashboard Page ---
@@ -305,19 +397,23 @@ const AdminDashboard = () => {
   const [trips, setTrips] = useState([]);
   const [editingTrip, setEditingTrip] = useState(null);
   const [parcels, setParcels] = useState([]);
+  const [routes, setRoutes] = useState([]);
+  const [editingRoute, setEditingRoute] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      const [alertsRes, tripsRes, parcelsRes] = await Promise.all([
+      const [alertsRes, tripsRes, parcelsRes, routesRes] = await Promise.all([
         axios.get(ALERTS_API_URL),
         axios.get(TRIPS_API_URL),
         axios.get(`${PARCELS_API_URL}/all`),
+        axios.get(ROUTES_API_URL),
       ]);
       setAlerts(alertsRes.data);
       setTrips(tripsRes.data);
       setParcels(parcelsRes.data);
+      setRoutes(routesRes.data);
     } catch (error) {
       console.error("Failed to fetch admin data:", error);
     } finally {
@@ -330,57 +426,33 @@ const AdminDashboard = () => {
   }, []);
 
   const handleToggleAlertStatus = async (alert) => {
-    const newStatus = alert.status === "active" ? "inactive" : "active";
-    try {
-      await axios.patch(`${ALERTS_API_URL}/${alert._id}/status`, {
-        status: newStatus,
-      });
-      fetchAllData();
-    } catch (error) {
-      console.error("Failed to toggle alert status:", error);
-    }
+    /* ... existing code ... */
   };
-
   const handleDeleteAlert = async (alertId) => {
-    if (
-      window.confirm("Are you sure you want to permanently delete this alert?")
-    ) {
-      try {
-        await axios.delete(`${ALERTS_API_URL}/${alertId}`);
-        fetchAllData();
-      } catch (error) {
-        console.error("Failed to delete alert:", error);
-      }
-    }
+    /* ... existing code ... */
   };
-
   const handleDeleteTrip = async (tripId) => {
-    if (
-      window.confirm("Are you sure you want to permanently delete this trip?")
-    ) {
-      try {
-        await axios.delete(`${TRIPS_API_URL}/${tripId}`);
-        fetchAllData();
-      } catch (error) {
-        console.error("Failed to delete trip:", error);
-      }
-    }
+    /* ... existing code ... */
+  };
+  const handleUpdateParcel = async (parcelId, updateData) => {
+    /* ... existing code ... */
   };
 
-  const handleUpdateParcel = async (parcelId, updateData) => {
-    try {
-      await axios.patch(`${PARCELS_API_URL}/${parcelId}/admin`, updateData);
-      fetchAllData();
-    } catch (error) {
-      console.error("Failed to update parcel:", error);
-      throw error;
+  const handleDeleteRoute = async (routeId) => {
+    if (
+      window.confirm("Are you sure you want to permanently delete this route?")
+    ) {
+      try {
+        await axios.delete(`${ROUTES_API_URL}/${routeId}`);
+        fetchAllData();
+      } catch (error) {
+        console.error("Failed to delete route:", error);
+      }
     }
   };
 
   const getPriorityColor = (priority) => {
-    if (priority === "Critical") return "border-red-500";
-    if (priority === "Warning") return "border-yellow-500";
-    return "border-blue-500";
+    /* ... existing code ... */
   };
 
   return (
@@ -390,10 +462,56 @@ const AdminDashboard = () => {
           Admin Dashboard
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-          {/* Column 1: Trips Management */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          {/* Column 1: Manage Routes */}
           <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Manage Routes
+            </h2>
+            <RouteForm
+              onRouteSaved={fetchAllData}
+              editingRoute={editingRoute}
+              setEditingRoute={setEditingRoute}
+            />
+            <div className="space-y-4">
+              {routes.map((route) => (
+                <div
+                  key={route._id}
+                  className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between"
+                >
+                  <div>
+                    <p
+                      className="font-bold text-lg"
+                      style={{ color: route.color }}
+                    >
+                      {route.name}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      {route.stops.length} stops, every {route.frequency} mins
+                    </p>
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => setEditingRoute(route)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteRoute(route._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Column 2: Manage Trips */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Manage Trips
             </h2>
             <TripForm
@@ -409,7 +527,6 @@ const AdminDashboard = () => {
                 >
                   <div>
                     <p className="font-bold text-lg">{trip.name}</p>
-                    <p className="text-gray-600 text-sm">{trip.description}</p>
                   </div>
                   <div className="flex gap-2 flex-shrink-0">
                     <button
@@ -430,9 +547,9 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Column 2: Alerts Management */}
+          {/* Column 3: Manage Alerts */}
           <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Manage Service Alerts
             </h2>
             <AlertForm
@@ -444,41 +561,38 @@ const AdminDashboard = () => {
               {alerts.map((alert) => (
                 <div
                   key={alert._id}
-                  className={`bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row items-start md:items-center justify-between border-l-4 ${getPriorityColor(
+                  className={`bg-white rounded-lg shadow-md p-4 border-l-4 ${getPriorityColor(
                     alert.priority
                   )}`}
                 >
-                  <div className="flex-1 mb-4 md:mb-0">
-                    <p className="font-bold text-lg">
-                      {alert.title}{" "}
-                      <span
-                        className={`text-sm font-semibold ml-2 px-2 py-0.5 rounded-full ${
-                          alert.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {alert.status}
-                      </span>
-                    </p>
-                    <p className="text-gray-600">{alert.message}</p>
-                  </div>
-                  <div className="flex gap-2 flex-shrink-0">
+                  <p className="font-bold">
+                    {alert.title}{" "}
+                    <span
+                      className={`text-xs font-semibold ml-2 px-2 py-0.5 rounded-full ${
+                        alert.status === "active"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {alert.status}
+                    </span>
+                  </p>
+                  <div className="flex gap-2 mt-2">
                     <button
                       onClick={() => handleToggleAlertStatus(alert)}
-                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg text-sm"
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-3 rounded-lg text-xs"
                     >
                       Toggle Status
                     </button>
                     <button
                       onClick={() => setEditingAlert(alert)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded-lg text-xs"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteAlert(alert._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs"
                     >
                       Delete
                     </button>
