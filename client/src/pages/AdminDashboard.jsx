@@ -426,13 +426,41 @@ const AdminDashboard = () => {
   }, []);
 
   const handleToggleAlertStatus = async (alert) => {
-    /* ... existing code ... */
+    const newStatus = alert.status === "active" ? "inactive" : "active";
+    try {
+      await axios.patch(`${ALERTS_API_URL}/${alert._id}/status`, {
+        status: newStatus,
+      });
+      fetchAllData();
+    } catch (error) {
+      console.error("Failed to toggle alert status:", error);
+    }
   };
+
   const handleDeleteAlert = async (alertId) => {
-    /* ... existing code ... */
+    if (
+      window.confirm("Are you sure you want to permanently delete this alert?")
+    ) {
+      try {
+        await axios.delete(`${ALERTS_API_URL}/${alertId}`);
+        fetchAllData();
+      } catch (error) {
+        console.error("Failed to delete alert:", error);
+      }
+    }
   };
+
   const handleDeleteTrip = async (tripId) => {
-    /* ... existing code ... */
+    if (
+      window.confirm("Are you sure you want to permanently delete this trip?")
+    ) {
+      try {
+        await axios.delete(`${TRIPS_API_URL}/${tripId}`);
+        fetchAllData();
+      } catch (error) {
+        console.error("Failed to delete trip:", error);
+      }
+    }
   };
   const handleUpdateParcel = async (parcelId, updateData) => {
     /* ... existing code ... */

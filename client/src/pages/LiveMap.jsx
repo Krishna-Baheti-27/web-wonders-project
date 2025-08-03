@@ -245,7 +245,7 @@ const InteractiveMapWebsite = () => {
           <div className="h-full">
             <MapContainer
               center={defaultCenter}
-              zoom={15}
+              zoom={12}
               style={{ height: "100%", width: "100%", zIndex: 0 }}
               data-aos="fade-up"
             >
