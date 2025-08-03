@@ -8,14 +8,14 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div>
-            <h3 className="text-2xl font-bold text-black mb-6">Logist</h3>
+            <h3 className="text-2xl font-bold text-black mb-6">TransItIx</h3>
 
             <div className="space-y-2 text-gray-600">
               <div className="font-semibold text-black">Address</div>
               <div>
-                2972 Westheimer Rd. Santa
+                SVNIT Surat
                 <br />
-                Ana. Illinois 85486
+                Gujarat
               </div>
               <button className="flex items-center gap-2 text-black hover:text-blue-600 mt-4">
                 <MapPin className="w-4 h-4" />
@@ -84,8 +84,8 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-black mb-4">Contact</h4>
             <div className="space-y-2 text-gray-600">
-              <div>(270) 555-0104</div>
-              <div>Hello@Mail.Com</div>
+              <div>(+91) 9544573464</div>
+              <div>transitix@gmail.com</div>
               <div className="flex gap-4 mt-4">
                 <Facebook className="w-5 h-5 text-gray-400 hover:text-blue-600 cursor-pointer" />
                 <Instagram className="w-5 h-5 text-gray-400 hover:text-pink-600 cursor-pointer" />
@@ -98,7 +98,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-200 pt-8 flex justify-between items-center">
           <div className="text-gray-600 text-sm">
-            Copyright © 2024 Minimal | All rights reserved.
+            Copyright © {new Date().getFullYear()} Minimal | All rights reserved.
           </div>
           <div className="flex gap-4 items-center">
             <span className="text-blue-600 font-semibold">stripe</span>

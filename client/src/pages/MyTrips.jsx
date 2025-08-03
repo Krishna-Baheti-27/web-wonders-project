@@ -96,7 +96,6 @@ const MyTripsPage = () => {
                         <span className="text-sm">{trip.duration}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-green-600 font-bold">
-                        <DollarSign className="h-4 w-4" />
                         <span>{trip.price}</span>
                       </div>
                     </div>

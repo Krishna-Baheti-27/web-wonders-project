@@ -38,7 +38,7 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo / Site Name */}
         <Link to="/" className="text-2xl font-bold text-blue-600 transition">
-          Apni site
+          TransItIx
         </Link>
 
         {/* Hamburger Button */}

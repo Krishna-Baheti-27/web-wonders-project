@@ -26,8 +26,8 @@ const services = [
     textColor: "text-blue-600",
   },
   {
-    id: "hotels",
-    name: "Hotels",
+    id: "parking",
+    name: "Parking",
     icon: Building2,
     bgColor: "bg-green-500",
     textColor: "text-green-600",
@@ -189,10 +189,10 @@ const LogisticsWebsite = () => {
                 <BusFront className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-black font-semibold mb-1">
-                Live Bus Tracking
+                Car-Pooling
               </h3>
               <p className="text-sm text-black mb-2">
-                Track your campus or city bus in real-time.
+                Helps you in taking a shared car.
               </p>
             </div>
 
@@ -461,9 +461,9 @@ const LogisticsWebsite = () => {
 
           <div className="mt-12 text-center">
             <p className="text-gray-600 mb-4">Still have questions?</p>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+            <Link to="/contact" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
               Contact Our Support Team
-            </button>
+            </Link>
           </div>
         </div>
       </section>
