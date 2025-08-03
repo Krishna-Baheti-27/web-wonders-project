@@ -44,6 +44,7 @@ const paymentGateway = async (
     order_id: order_id,
     handler: async function (response) {
       try{
+        console.log("Hello");
         await axios.post(`${VITE_BACKEND_BASE_URL}/parcels/book`, bookingDetails[0]);
         console.log("booked");
         setIsBooked(true);

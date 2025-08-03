@@ -161,6 +161,7 @@ const Parcel = () => {
       });
       setFare(res.data.fare);
     } catch (err) {
+      
       setError(
         err.response?.data?.message ||
           "Error calculating fare. Please try again."
