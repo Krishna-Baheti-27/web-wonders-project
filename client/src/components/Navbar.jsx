@@ -7,13 +7,11 @@ const Navbar = () => {
   const [isAuthenticated, setisAuthenticated] = useState(null);
   const [isAdmin, setIsAdmin] = useState(null);
   useEffect(() => {
-  if (data.user?._id) {
-    setisAuthenticated(true);
-    setIsAdmin(data.user?.is_admin);
-  }
-  }, [])
-  
-
+    if (data.user?._id) {
+      setisAuthenticated(true);
+      setIsAdmin(data.user?.is_admin);
+    }
+  }, []);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -75,7 +73,8 @@ const Navbar = () => {
           <NavItem to="/carpool">Carpool</NavItem>
           <NavItem to="/my-trips">Trips</NavItem>
           <NavItem to="/orders">My Orders</NavItem>
-          { isAdmin ? <NavItem to="/admin/dashboard">Admin</NavItem> : null }
+          <NavItem to="/parking">Parking</NavItem>
+          {isAdmin ? <NavItem to="/admin/dashboard">Admin</NavItem> : null}
           <NavItem to="/parcel">Send a Parcel</NavItem>
           <NavItem to="/contact">Contact</NavItem>
         </div>
@@ -104,6 +103,7 @@ const Navbar = () => {
           <NavItem to="/carpool">Carpool</NavItem>
           <NavItem to="/my-trips">Trips</NavItem>
           <NavItem to="/orders">My Orders</NavItem>
+          <NavItem to="/parking">Parking</NavItem>
           <NavItem to="/admin/dashboard">Admin</NavItem>
           <NavItem to="/parcel">Send a Parcel</NavItem>
           <div className="pt-4">

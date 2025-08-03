@@ -23,6 +23,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer.jsx";
 import AlertBanner from "./components/AlertBanner";
 import TripViewPage from "./pages/TripView.jsx";
+import ParkingPage from "./pages/Parking.jsx";
 
 function App() {
   useEffect(() => {
@@ -58,7 +59,7 @@ function App() {
               element={
                 <PrivateRoute>
                   <AdminRoute>
-                  <AdminDashboard />
+                    <AdminDashboard />
                   </AdminRoute>
                 </PrivateRoute>
               }
@@ -108,6 +109,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Parcel />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/parking"
+              element={
+                <PrivateRoute>
+                  <ParkingPage />
                 </PrivateRoute>
               }
             />
