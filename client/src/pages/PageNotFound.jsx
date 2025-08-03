@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Calendar, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Transport404 = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -97,26 +98,26 @@ const Transport404 = () => {
           {/* Action Buttons */}
           <div className={`transform transition-all duration-1000 delay-500 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
             {/* Primary Button */}
-            <button className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 mb-6 group">
+            <Link to="/" className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 mb-6 group">
               <Home className="w-5 h-5 mr-2" />
               Back to Homepage
               <ArrowRight className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
+            </Link>
 
             {/* Secondary Links */}
             <div className="flex flex-wrap justify-center gap-4 max-w-lg mx-auto">
-              <button className="inline-flex items-center px-6 py-3 bg-white hover:bg-gray-50 text-blue-600 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 border border-blue-200 hover:border-blue-300">
+              <Link to="/schedules" className="inline-flex items-center px-6 py-3 bg-white hover:bg-gray-50 text-blue-600 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 border border-blue-200 hover:border-blue-300">
                 <Calendar className="w-4 h-4 mr-2" />
                 View Schedules
-              </button>
-              <button className="inline-flex items-center px-6 py-3 bg-white hover:bg-gray-50 text-blue-600 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 border border-blue-200 hover:border-blue-300">
+              </Link>
+              <Link to="/my-trips" className="inline-flex items-center px-6 py-3 bg-white hover:bg-gray-50 text-blue-600 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 border border-blue-200 hover:border-blue-300">
                 <MapPin className="w-4 h-4 mr-2" />
                 Plan Your Trip
-              </button>
-              <button className="inline-flex items-center px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+              </Link>
+              <Link to="/contact" className="inline-flex items-center px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                 <Phone className="w-4 h-4 mr-2" />
                 Contact Us
-              </button>
+              </Link>
             </div>
           </div>
 

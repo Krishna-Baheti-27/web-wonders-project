@@ -17,10 +17,9 @@ import { useEffect } from "react";
 import Schedules from "./pages/Schedules.jsx";
 import CarpoolPage from "./pages/CarpoolPage.jsx";
 import { AdminRoute } from "./components/AdminRoute.jsx";
+import Transport404 from "./pages/PageNotFound.jsx";
 
 // --- Step 1: Import Navbar and AlertBanner here ---
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer.jsx";
 import AlertBanner from "./components/AlertBanner";
 import TripViewPage from "./pages/TripView.jsx";
 import ParkingPage from "./pages/Parking.jsx";
@@ -152,7 +151,7 @@ function App() {
                 </NotPrivateRoute>
               }
             />
-            <Route path="*" element={<h1>404 Not Found</h1>} />
+            <Route path="*" element={<Transport404 />} />
           </Routes>
         </Context>
       </BrowserRouter>
