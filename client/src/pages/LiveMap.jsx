@@ -52,6 +52,7 @@ const InteractiveMapWebsite = () => {
       return stopNames.includes(lowerFrom) && stopNames.includes(lowerTo);
     });
 
+
     setMatchedRoute(found || null);
   };
 
@@ -257,7 +258,7 @@ const InteractiveMapWebsite = () => {
               {(matchedRoute ? [matchedRoute] : []).map((route) => (
                 <Polyline
                   key={route.id}
-                  positions={route.stops.map((s) => [s.lat, s.lng])}
+                  positions={route.stops.map((s) => [s.latitude, s.longitude])}
                   color={route.color}
                   data-aos="fade-up"
                 />
@@ -266,7 +267,7 @@ const InteractiveMapWebsite = () => {
               {(matchedRoute ? matchedRoute.stops : []).map((stop, i) => (
                 <Marker
                   key={i}
-                  position={[stop.lat, stop.lng]}
+                  position={[stop.latitude, stop.longitude]}
                   icon={L.icon({
                     iconUrl: "/images/location-pin.png",
                     iconSize: [40, 40],
@@ -276,7 +277,7 @@ const InteractiveMapWebsite = () => {
                     click: (e) => {
                       const map = e.target._map;
                       if (map) {
-                        map.flyTo([stop.lat, stop.lng], 17, { duration: 1 });
+                        map.flyTo([stop.latitude, stop.longitude], 17, { duration: 1 });
                       }
                     },
                   }}
