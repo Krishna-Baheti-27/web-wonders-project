@@ -137,7 +137,7 @@ const ContactPage = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-colors"
-                      placeholder="(555) 123-4567"
+                      placeholder="9544573464"
                     />
                   </div>
                 </div>
@@ -210,7 +210,7 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800 mb-1">Phone</h3>
-                    <p className="text-gray-600">(555) 123-4567</p>
+                    <p className="text-gray-600">9544573464</p>
                     <p className="text-sm text-gray-500">Mon-Fri 8AM-6PM EST</p>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800 mb-1">Email</h3>
-                    <p className="text-gray-600">info@swifttransport.com</p>
+                    <p className="text-gray-600">transitix@gmail.com</p>
                     <p className="text-sm text-gray-500">
                       We'll respond within 24 hours
                     </p>

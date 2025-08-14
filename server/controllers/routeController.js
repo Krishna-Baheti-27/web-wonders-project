@@ -58,7 +58,9 @@ export const updateRoute = async (req, res) => {
   try {
     const { routeId } = req.params;
     const { id, name, type, color, stops, startTime, endTime, frequency } =
-      req.body;
+    req.body;
+
+    // console.log(id, name, type, color, stops, startTime, endTime, frequency)
 
     let parsedStops;
     try {
@@ -71,7 +73,6 @@ export const updateRoute = async (req, res) => {
             "Invalid format for stops. Please provide a valid JSON array.",
         });
     }
-
     const updatedRoute = await Route.findByIdAndUpdate(
       routeId,
       {
@@ -84,9 +85,8 @@ export const updateRoute = async (req, res) => {
         endTime,
         frequency,
       },
-      { new: true, runValidators: true }
     );
-
+  
     if (!updatedRoute) {
       return res.status(404).json({ message: "Route not found." });
     }

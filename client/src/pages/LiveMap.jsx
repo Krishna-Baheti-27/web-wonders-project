@@ -52,10 +52,9 @@ const InteractiveMapWebsite = () => {
       return stopNames.includes(lowerFrom) && stopNames.includes(lowerTo);
     });
 
-
+    console.log(found);
     setMatchedRoute(found || null);
   };
-
   const defaultCenter = [21.1645, 72.785];
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -126,56 +125,55 @@ const InteractiveMapWebsite = () => {
               </div>
 
               {/* Route Information */}
-              {/* {from && to && (
-                <div className="p-4 border-b">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                    Route Details
-                  </h3>
-                  <div className="bg-blue-50 rounded-lg p-4 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm text-gray-600">Duration:</span>
-                      </div>
-                      <span className="font-semibold text-blue-600">
-                        {routeInfo.duration}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Ruler className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm text-gray-600">Distance:</span>
-                      </div>
-                      <span className="font-semibold">
-                        {routeInfo.distance}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Zap className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm text-gray-600">Traffic:</span>
-                      </div>
-                      <span className="font-semibold text-green-600">
-                        {routeInfo.traffic}
-                      </span>
-                    </div>
-                  </div>
+{from && to && (
+  <div className="p-4 border-b">
+    <h3 className="text-lg font-semibold text-gray-800 mb-3">
+      Route Details
+    </h3>
 
-                  <div className="flex space-x-2 mt-3">
-                    <button
-                      onClick={saveCurrentRoute}
-                      className="flex-1 bg-green-100 hover:bg-green-200 text-green-700 py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1"
-                    >
-                      <Heart className="h-4 w-4" />
-                      <span className="text-sm">Save</span>
-                    </button>
-                    <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded-lg transition-colors flex items-center justify-center space-x-1">
-                      <Share className="h-4 w-4" />
-                      <span className="text-sm">Share</span>
-                    </button>
-                  </div>
-                </div>
-              )} */}
+    {matchedRoute ? (
+      <div className="bg-blue-50 rounded-lg p-4 space-y-3">
+        {/* Route Name */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-600">Service Name:</span>
+          <span className="font-semibold text-gray-800">
+            {matchedRoute.name}
+          </span>
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-600">Type:</span>
+          <span className="font-semibold text-gray-800">
+            {matchedRoute.type}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-600">Route:</span>
+          <span className="font-semibold text-gray-800">
+            {from} → {to}
+          </span>
+        </div>
+
+        {/* Route Color */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-600">Route Color:</span>
+          <div
+            className="w-6 h-6 rounded-full border"
+            style={{
+              backgroundColor: matchedRoute.color || "#007BFF"
+            }}
+          ></div>
+        </div>
+
+      </div>
+    ) : (
+      <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg">
+        <strong>Error:</strong> Route not found for "{from}" to "{to}"
+      </div>
+    )}
+  </div>
+)}
             </div>
           </div>
         </div>

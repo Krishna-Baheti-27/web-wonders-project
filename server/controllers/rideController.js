@@ -30,7 +30,7 @@ export const createRide = async (req, res) => {
 
     const newRide = new Ride({
       driver,
-      driverPhone, // Save the phone number
+      driverPhone,
       from,
       to,
       departureTime,
@@ -39,6 +39,7 @@ export const createRide = async (req, res) => {
     });
 
     const savedRide = await newRide.save();
+    console.log("hello");
     res
       .status(201)
       .json({ message: "Ride offered successfully!", ride: savedRide });

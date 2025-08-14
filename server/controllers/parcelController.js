@@ -26,8 +26,8 @@ export const calculateFare = async (req, res) => {
     const { source, destination, weight } = req.body;
     if (!source || !destination || !weight) {
       return res
-        .status(400)
-        .json({ message: "Source, destination, and weight are required." });
+      .status(400)
+      .json({ message: "Source, destination, and weight are required." });
     }
     const routes = await Route.find({}).lean();
     let sourceStop, destinationStop;
@@ -48,17 +48,21 @@ export const calculateFare = async (req, res) => {
     }
     if (!sourceStop || !destinationStop) {
       return res
-        .status(404)
-        .json({
-          message: "Could not find one or both locations on our routes.",
-        });
+      .status(404)
+      .json({
+        message: "Could not find one or both locations on our routes.",
+      });
     }
     const distance = getDistanceFromLatLonInKm(
-      sourceStop.lat,
-      sourceStop.lng,
-      destinationStop.lat,
-      destinationStop.lng
+      sourceStop.latitude,
+      sourceStop.longitude,
+      destinationStop.latitude,
+      destinationStop.longitude
     );
+    console.log(sourceStop);
+    console.log(destinationStop);
+    console.log(distance);
+
     const calculatedFareInUSD = 5 + distance * 1.5 + parseFloat(weight) * 2;
     const calculatedFareInINR = calculatedFareInUSD * 80;
     if (isNaN(calculatedFareInINR)) {

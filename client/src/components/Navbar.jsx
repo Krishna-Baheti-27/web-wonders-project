@@ -69,14 +69,14 @@ const Navbar = () => {
         <div className="hidden md:flex space-x-8 items-center text-md font-medium">
           <NavItem to="/">Home</NavItem>
           <NavItem to="/live-map">Live Map</NavItem>
-          <NavItem to="/schedules">Schedules</NavItem>
-          <NavItem to="/carpool">Carpool</NavItem>
+          {/* <NavItem to="/schedules">Schedules</NavItem> */}
           <NavItem to="/my-trips">Trips</NavItem>
-          <NavItem to="/orders">My Orders</NavItem>
+          <NavItem to="/carpool">Carpool</NavItem>
           <NavItem to="/parking">Parking</NavItem>
-          {isAdmin ? <NavItem to="/admin/dashboard">Admin</NavItem> : null}
           <NavItem to="/parcel">Send a Parcel</NavItem>
+          <NavItem to="/orders">My Orders</NavItem>
           <NavItem to="/contact">Contact</NavItem>
+          {isAdmin ? <NavItem to="/admin/dashboard">Admin</NavItem> : null}
         </div>
 
         {/* Desktop Auth Button */}
